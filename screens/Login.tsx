@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SharedInput } from "../components/shared/SharedInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
@@ -24,7 +23,6 @@ const Login = () => {
   const auth = getAuth(app);
   // si queremos reloguer, descomentar la linea de abajo y recargar
   // AsyncStorage.setItem("token", "");
-
   // funcion crear usuario
   const createUser = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -46,11 +44,9 @@ const Login = () => {
         } catch (error) {
           AsyncStorage.setItem("token", "");
         }
-        const user = userCredentials.user;
       })
       .catch((err) => {
         AsyncStorage.setItem("token", "");
-        console.log("entra al catch");
       });
   };
 
@@ -81,8 +77,6 @@ const Login = () => {
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
       ></TextInput>
-      {/* <SharedInput placeholder="example@example.com" label="Email" />
-      <SharedInput typePassword={true} label="Password" /> */}
       <TouchableOpacity onPress={loginUser} style={styles.buttonSend}>
         <Text style={styles.textSendButton}>LOGIN</Text>
       </TouchableOpacity>
