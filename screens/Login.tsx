@@ -28,11 +28,13 @@ const Login = () => {
             userCredentials._tokenResponse.idToken
           );
           AsyncStorage.setItem("token", userToJSON);
+          alert('Welcome!');
         } catch (error) {
           AsyncStorage.setItem("token", "");
         }
       })
       .catch((err) => {
+        alert(err);
         AsyncStorage.setItem("token", "");
       });
   };
@@ -52,10 +54,12 @@ const Login = () => {
         </TouchableOpacity>
       </View>
       <TextInput
+        style={styles.input}
         onChangeText={(text) => setEmail(text)}
         placeholder="Email"
       ></TextInput>
       <TextInput
+        style={styles.input}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
       ></TextInput>
@@ -72,6 +76,9 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
+  input: {
+    color: 'white'
+  },
   container: {
     backgroundColor: "#130040",
   },

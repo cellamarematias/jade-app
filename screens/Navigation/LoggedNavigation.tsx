@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 // screens
 import Home from "../Home";
 import Blog from "../Blog";
+import Favs from "../Favs";
 
 const Tab: any = createBottomTabNavigator();
 
@@ -14,9 +15,9 @@ function MyTabs() {
       initialRouteName="Home"
       tabBarOptions={{
         activeTintColor: "#CAF99B",
-        activeBackgroundColor: "#32089A",
-        inactiveTintColor: "#4B9600",
-        inactiveBackgroundColor: "#32089A",
+        activeBackgroundColor: "#141414",
+        inactiveTintColor: "#fff",
+        inactiveBackgroundColor: "#141414",
       }}
       screenOptions={{
         tabBarActiveTintColor: "#CAF99B",
@@ -35,6 +36,14 @@ function MyTabs() {
         component={Blog}
         options={{
           tabBarLabel: 'News',
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Favs"
+        component={Favs}
+        options={{
+          tabBarLabel: 'Favs',
           headerShown: false,
         }}
       />

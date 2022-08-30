@@ -30,12 +30,15 @@ const Register = () => {
             userCredentials._tokenResponse.idToken
           );
           AsyncStorage.setItem("token", userToJSON);
+
+          alert('User registered');
         } catch (error) {
           AsyncStorage.setItem("token", "");
         }
       })
       .catch((err) => {
         AsyncStorage.setItem("token", "");
+        alert(err);
       });
   };
   return (
@@ -54,11 +57,13 @@ const Register = () => {
       </View>
       <Text>Email</Text>
       <TextInput
+        style={styles.input}
         onChangeText={(text) => setEmail(text)}
         placeholder="example@example.com"
       />
       <Text>Password</Text>
       <TextInput
+        style={styles.input}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
       />
@@ -73,6 +78,9 @@ const Register = () => {
   );
 };
 const styles = StyleSheet.create({
+  input: {
+    color: 'white'
+  },
   container: {
     backgroundColor: "#130040",
   },
