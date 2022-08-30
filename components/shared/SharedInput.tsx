@@ -14,12 +14,16 @@ type Props = {
   label?: string;
   placeholder?: string;
   typePassword?: boolean;
+  setEmail: any;
+  setPassword: any
 };
 
-export const InputPrimary: React.FC<Props> = ({
+export const SharedInput: React.FC<Props> = ({
   placeholder,
   label,
   typePassword,
+  setEmail,
+  setPassword,
 }) => {
   const [viewPassowrd, setViewPassowrd] = useState(true);
   return (
@@ -28,6 +32,7 @@ export const InputPrimary: React.FC<Props> = ({
       {typePassword ? (
         <View style={styles.boxPassword}>
           <TextInput
+          onChangeText={(text) => setPassword(text)}
             secureTextEntry={viewPassowrd}
             placeholder={placeholder}
             style={(styles.inputPrimary, styles.inputPassword)}
@@ -42,7 +47,11 @@ export const InputPrimary: React.FC<Props> = ({
           </TouchableOpacity>
         </View>
       ) : (
-        <TextInput placeholder={placeholder} style={styles.inputPrimary} />
+        <TextInput
+          onChangeText={(text) => setEmail(text)}
+          placeholder={placeholder}
+          style={styles.inputPrimary}
+        />
       )}
     </View>
   );

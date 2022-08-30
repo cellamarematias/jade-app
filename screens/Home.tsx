@@ -1,13 +1,10 @@
 import React from "react";
-import { View, Text } from "react-native";
-// import NavBar from "../components/navbar/BottomTab";
+import { View, Text, StyleSheet } from "react-native";
+import Navigation from './Navigation/LoggedNavigation';
 
 const Home = () => {
   return (
-    <View>
-      <Text>Home</Text>
-      {/* <NavBar /> */}
-    </View>
+    <Text>Home screen</Text>
   );
 };
 
