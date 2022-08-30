@@ -1,29 +1,74 @@
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from "react-native";
-import { SharedInput } from "../components/shared/SharedInput";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { app } from "../src/firebase/firebaseConfig";
 
 const Register = () => {
+  const navigation: any = useNavigation();
+  const auth = getAuth(app);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // funcion crear usuario
+  const createUser = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials: any) => {
+        try {
+          const userToJSON: string = JSON.stringify(
+            userCredentials._tokenResponse.idToken
+          );
+          AsyncStorage.setItem("token", userToJSON);
+        } catch (error) {
+          AsyncStorage.setItem("token", "");
+        }
+      })
+      .catch((err) => {
+        AsyncStorage.setItem("token", "");
+      });
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.exit}>
         <Text style={styles.exitText}>X</Text>
       </TouchableOpacity>
       <View style={styles.boxTittles}>
-        <View>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.textTittle}>Log In</Text>
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.textTittle}>Sign Up</Text>
           <View style={styles.borderBot}></View>
         </View>
-        <Text style={styles.textTittle}>Sign Up</Text>
       </View>
-      <SharedInput placeholder="example@example.com" label="Email" />
-      <SharedInput typePassword={true} label="Password" />
-      <TouchableOpacity style={styles.buttonSend}>
-        <Text style={styles.textSendButton}>LOGIN</Text>
+      <Text>Email</Text>
+      <TextInput
+        onChangeText={(text) => setEmail(text)}
+        placeholder="example@example.com"
+      />
+      <Text>Password</Text>
+      <TextInput
+        onChangeText={(text) => setPassword(text)}
+        secureTextEntry={true}
+      />
+      <TouchableOpacity onPress={createUser} style={styles.buttonSend}>
+        <Text style={styles.textSendButton}>REGISTER</Text>
       </TouchableOpacity>
-      <Text style={styles.forgotPassword}>Forgot your password ?</Text>
-      <Text style={styles.optionalLoginText}>OR</Text>
+      {/* <Text style={styles.optionalLoginText}>OR</Text>
       <TouchableOpacity style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>Continue with Google</Text>
-      </TouchableOpacity>
+        <Text style={styles.textButtonContinue}>Sign In with Google</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -119,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register
+export default Register;

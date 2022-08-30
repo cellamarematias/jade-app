@@ -10,29 +10,16 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { app } from "../src/firebase/firebaseConfig";
-import Register from "./Register";
 
 const Login = () => {
   const navigation: any = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = getAuth(app);
-  // si queremos reloguer, descomentar la linea de abajo y recargar
-  // AsyncStorage.setItem("token", "");
-  // funcion crear usuario
-  const createUser = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        console.log(userCredentials);
-        const user = userCredentials.user;
-      })
-      .catch((err) => console.log("entra al catch"));
-  };
-  // funcion login
+
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials: any) => {
@@ -60,12 +47,7 @@ const Login = () => {
           <Text style={styles.textTittle}>Log In</Text>
           <View style={styles.borderBot}></View>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("haciendo click");
-            navigation.navigate({ Register: Register });
-          }}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text style={styles.textTittle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
