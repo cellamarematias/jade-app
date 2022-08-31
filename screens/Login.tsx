@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { emailAndPasswordLogin, googleLogin } from "../src/firebase/Firebase";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -7,41 +8,16 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { app } from "../src/firebase/firebaseConfig";
+import { useForm, Controller } from "react-hook-form";
 
-const Login = () => {
+const Login: React.FC = () => {
   const navigation: any = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const auth = getAuth(app);
-
-  const loginUser = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials: any) => {
-        try {
-          const userToJSON: string = JSON.stringify(
-            userCredentials._tokenResponse.idToken
-          );
-          AsyncStorage.setItem("token", userToJSON);
-        } catch (error) {
-          AsyncStorage.setItem("token", "");
-        }
-      })
-      .catch((err) => {
-        AsyncStorage.setItem("token", "");
-      });
-  };
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [viewPassowrd, setViewPassowrd] = useState<boolean>(true);
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.exit}>
-        <Text style={styles.exitText}>X</Text>
-      </TouchableOpacity>
       <View style={styles.boxTittles}>
         <View>
           <Text style={styles.textTittle}>Log In</Text>
@@ -51,42 +27,115 @@ const Login = () => {
           <Text style={styles.textTittle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      <TextInput
-        onChangeText={(text) => setEmail(text)}
-        placeholder="Email"
-      ></TextInput>
-      <TextInput
-        onChangeText={(text) => setPassword(text)}
-        placeholder="Password"
-      ></TextInput>
-      <TouchableOpacity onPress={loginUser} style={styles.buttonSend}>
+      <View style={styles.inputsBox}>
+        <View>
+          <Text style={styles.inputsLabel}>Email</Text>
+          <TextInput
+            style={styles.inputs}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+          ></TextInput>
+        </View>
+        <View>
+          <Text style={styles.inputsLabel}>Password</Text>
+          <View style={styles.boxPassword}>
+            <TextInput
+              style={styles.inputs}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={viewPassowrd}
+              placeholder="Password"
+            ></TextInput>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => setViewPassowrd(!viewPassowrd)}
+            >
+              <Text style={styles.iconPasswordText}>
+                {viewPassowrd ? "Show" : "Hide"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <TouchableOpacity
+        onPress={() => emailAndPasswordLogin(email, password)}
+        style={styles.buttonSend}
+      >
         <Text style={styles.textSendButton}>LOGIN</Text>
       </TouchableOpacity>
       <Text style={styles.forgotPassword}>Forgot your password ?</Text>
       <Text style={styles.optionalLoginText}>OR</Text>
-      <TouchableOpacity style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>Continue with Google</Text>
+      <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
+        <Text style={styles.textButtonContinue}>
+          <Text style={styles.GfromGoogle}>G</Text>Continue with Google
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+        <Text style={styles.textCreateAccount}>
+          Don't have an account? Create here
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  boxPassword: {
+    borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 40,
+    backgroundColor: "#6053DD",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
+    flex: 1,
     backgroundColor: "#130040",
   },
-  exit: {
-    width: "auto",
-    display: "flex",
-    flexDirection: "row-reverse",
-    marginVertical: 5,
+  inputsBox: {
+    marginTop: 5,
+    width: "85%",
+    marginHorizontal: "auto",
   },
-  exitText: {
+  inputsLabel: {
+    marginTop: 20,
+    marginBottom: 10,
+    color: "#fff",
     fontFamily: "Roboto",
-    fontSize: 25,
-    paddingTop: 3,
-    paddingRight: 10,
-    color: "#CAF99B",
+    fontSize: 30,
+  },
+  inputs: {
+    backgroundColor: "#6053DD",
+    color: "#fff",
+    width: "100%",
+    height: 50,
+    borderRadius: 5,
+    paddingLeft: 10,
+    fontFamily: "Roboto",
+    fontSize: 20,
+    letterSpacing: 2,
+  },
+  icon: {
+    borderTopEndRadius: 5,
+    borderBottomEndRadius: 5,
+    textAlign: "center",
+    width: 80,
+    backgroundColor: "#CAF99B",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  iconPassword: {
+    color: "#FFF",
+  },
+  iconPasswordText: {
+    fontFamily: "Roboto",
+    fontSize: 23,
+    color: "#130040",
+    letterSpacing: 1.3,
+    fontWeight: "500",
   },
   buttonSend: {
     textAlign: "center",
@@ -96,8 +145,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     paddingVertical: 7,
-    width: "80%",
+    width: "85%",
+    height: 50,
     marginHorizontal: "auto",
+  },
+  GfromGoogle: {
+    fontSize: 50,
+    fontWeight: "900",
+    paddingRight: 8,
   },
   textSendButton: {
     letterSpacing: 2,
@@ -107,11 +162,12 @@ const styles = StyleSheet.create({
     paddingVertical: "auto",
   },
   forgotPassword: {
-    width: "80%",
+    width: "85%",
     marginHorizontal: "auto",
     textAlign: "right",
     marginVertical: 10,
     color: "#fff",
+    fontSize: 16,
   },
   optionalLoginText: {
     letterSpacing: 4,
@@ -120,13 +176,15 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 30,
     textAlign: "center",
+    fontWeight: "200",
   },
   continueGoogle: {
-    width: "80%",
+    width: "85%",
     paddingVertical: 10,
     marginHorizontal: "auto",
     backgroundColor: "transparent",
-    border: 2,
+    border: 20,
+    borderColor: "#fff",
     borderRadius: 5,
     textAlign: "center",
   },
@@ -139,7 +197,16 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 25,
   },
+  textCreateAccount: {
+    marginTop: '10%',
+    color: "#FFF",
+    fontFamily: "Roboto",
+    fontSize: 25,
+    fontWeight: "500",
+    textAlign: "center",
+  },
   boxTittles: {
+    marginTop: 30,
     backgroundColor: "#130040",
     paddingVertical: 30,
     display: "flex",
@@ -149,6 +216,7 @@ const styles = StyleSheet.create({
   textTittle: {
     fontFamily: "Roboto",
     fontSize: 40,
+    color: "#fff",
   },
   borderTittle: {
     fontFamily: "Roboto",

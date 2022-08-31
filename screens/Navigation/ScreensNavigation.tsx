@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoggedNavigation from "./LoggedNavigation";
 import NotLoggedNavigation from "./NotLoggedNavigation";
+import { StatusBar } from "expo-status-bar";
+
 function ScreensNavigation() {
   const [auth, setAuth] = useState("");
   const checkUser = async () => {
@@ -17,9 +19,15 @@ function ScreensNavigation() {
   checkUser();
 
   return auth === null || auth === "" ? (
-    <NotLoggedNavigation />
+    <>
+        <StatusBar style="light" />
+        <NotLoggedNavigation />
+    </>
   ) : (
+    <>
+    <StatusBar style="light" />
     <LoggedNavigation />
+    </>
   );
 }
 
