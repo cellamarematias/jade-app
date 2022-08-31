@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,25 +21,19 @@ const firebaseConfig = {
 export const app: any = initializeApp(firebaseConfig);
 
 // login with email and password
-export function emailAndPasswordLogin(email: string, password: string) {
+export function emailAndPasswordLogin(email: string, password: string): any {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredentials: any) => {
       console.log(userCredentials);
-      try {
-        const userToJSON: string = JSON.stringify(
-          userCredentials._tokenResponse.idToken
-        );
-        AsyncStorage.setItem("token", userToJSON);
-        console.log("bien logged con email");
-      } catch (error) {
-        AsyncStorage.setItem("token", "");
-      }
+      const userToJSON: string = JSON.stringify(
+        userCredentials._tokenResponse.idToken
+      );
+      AsyncStorage.setItem("token", userToJSON);
     })
     .catch((err) => {
       AsyncStorage.setItem("token", "");
     });
 }
-
 // login with google
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();

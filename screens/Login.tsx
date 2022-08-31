@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import { emailAndPasswordLogin, googleLogin } from "../src/firebase/Firebase";
+import { googleLogin } from "../src/firebase/Firebase";
 import { useNavigation } from "@react-navigation/native";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { useForm, Controller } from "react-hook-form";
+import { FormLogin } from "../components/shared/FormLogin";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const Login: React.FC = () => {
   const navigation: any = useNavigation();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [viewPassowrd, setViewPassowrd] = useState<boolean>(true);
 
   return (
     <View style={styles.container}>
@@ -27,127 +18,27 @@ const Login: React.FC = () => {
           <Text style={styles.textTittle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.inputsBox}>
-        <View>
-          <Text style={styles.inputsLabel}>Email</Text>
-          <TextInput
-            style={styles.inputs}
-            onChangeText={(text) => setEmail(text)}
-            placeholder="Email"
-          ></TextInput>
-        </View>
-        <View>
-          <Text style={styles.inputsLabel}>Password</Text>
-          <View style={styles.boxPassword}>
-            <TextInput
-              style={styles.inputs}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={viewPassowrd}
-              placeholder="Password"
-            ></TextInput>
-            <TouchableOpacity
-              style={styles.icon}
-              onPress={() => setViewPassowrd(!viewPassowrd)}
-            >
-              <Text style={styles.iconPasswordText}>
-                {viewPassowrd ? "Show" : "Hide"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      <TouchableOpacity
-        onPress={() => emailAndPasswordLogin(email, password)}
-        style={styles.buttonSend}
-      >
-        <Text style={styles.textSendButton}>LOGIN</Text>
-      </TouchableOpacity>
+      <FormLogin />
       <Text style={styles.forgotPassword}>Forgot your password ?</Text>
-      <Text style={styles.optionalLoginText}>OR</Text>
       <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
         <Text style={styles.textButtonContinue}>
           <Text style={styles.GfromGoogle}>G</Text>Continue with Google
         </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.textCreateAccount}>
-          Don't have an account? Create here
-        </Text>
+        <Text style={styles.textCreateAccount}>Don't have an account?</Text>
+        <View style={styles.boxCreateAccount}>
+          <Text style={styles.createAccount}>Create Account</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  boxPassword: {
-    borderRadius: 5,
-    marginTop: 10,
-    marginBottom: 40,
-    backgroundColor: "#6053DD",
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
     flex: 1,
     backgroundColor: "#130040",
-  },
-  inputsBox: {
-    marginTop: 5,
-    width: "85%",
-    marginHorizontal: "auto",
-  },
-  inputsLabel: {
-    marginTop: 20,
-    marginBottom: 10,
-    color: "#fff",
-    fontFamily: "Roboto",
-    fontSize: 30,
-  },
-  inputs: {
-    backgroundColor: "#6053DD",
-    color: "#fff",
-    width: "100%",
-    height: 50,
-    borderRadius: 5,
-    paddingLeft: 10,
-    fontFamily: "Roboto",
-    fontSize: 20,
-    letterSpacing: 2,
-  },
-  icon: {
-    borderTopEndRadius: 5,
-    borderBottomEndRadius: 5,
-    textAlign: "center",
-    width: 80,
-    backgroundColor: "#CAF99B",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  iconPassword: {
-    color: "#FFF",
-  },
-  iconPasswordText: {
-    fontFamily: "Roboto",
-    fontSize: 23,
-    color: "#130040",
-    letterSpacing: 1.3,
-    fontWeight: "500",
-  },
-  buttonSend: {
-    textAlign: "center",
-    backgroundColor: "#CAF99B",
-    borderRadius: 5,
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    paddingVertical: 7,
-    width: "85%",
-    height: 50,
-    marginHorizontal: "auto",
   },
   GfromGoogle: {
     fontSize: 50,
@@ -165,9 +56,9 @@ const styles = StyleSheet.create({
     width: "85%",
     marginHorizontal: "auto",
     textAlign: "right",
-    marginVertical: 10,
     color: "#fff",
     fontSize: 16,
+    marginVertical: 15,
   },
   optionalLoginText: {
     letterSpacing: 4,
@@ -198,17 +89,34 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   textCreateAccount: {
-    marginTop: '10%',
+    marginTop: "10%",
     color: "#FFF",
     fontFamily: "Roboto",
     fontSize: 25,
     fontWeight: "500",
     textAlign: "center",
   },
+  createAccount: {
+    marginTop: 10,
+    color: "#FFF",
+    fontFamily: "Roboto",
+    fontSize: 25,
+    fontWeight: "500",
+    textAlign: "center",
+    borderBottomColor: "#CAF99B",
+    borderTopColor: "transparent",
+    borderRightColor: "transparent",
+    borderLeftColor: "transparent",
+    borderWidth: 3,
+  },
+  boxCreateAccount: {
+    width: '42%',
+    marginHorizontal: 'auto'
+  },
   boxTittles: {
-    marginTop: 30,
+    marginTop: 18,
     backgroundColor: "#130040",
-    paddingVertical: 30,
+    paddingVertical: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",

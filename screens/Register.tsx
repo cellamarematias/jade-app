@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { googleLogin, createUser } from "../src/firebase/Firebase";
+import { FormRegister } from "../components/shared/FormRegister";
 
 const Register = () => {
   const navigation: any = useNavigation();
@@ -26,41 +27,15 @@ const Register = () => {
           <View style={styles.borderBot}></View>
         </View>
       </View>
-      <View style={styles.inputsBox}>
-        <Text style={styles.inputsLabel}>Email</Text>
-        <TextInput
-          style={styles.inputs}
-          onChangeText={(text) => setEmail(text)}
-          placeholder="Email"
-        />
-        <Text style={styles.inputsLabel}>Password</Text>
-        <View style={styles.boxPassword}>
-          <TextInput
-            placeholder="Password"
-            style={styles.inputs}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={viewPassowrd}
-          />
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => setViewPassowrd(!viewPassowrd)}
-          >
-            <Text style={styles.iconPasswordText}>
-              {viewPassowrd ? "Show" : "Hide"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity onPress={() => createUser(email, password)} style={styles.buttonSend}>
-        <Text style={styles.textSendButton}>REGISTER</Text>
-      </TouchableOpacity>
-      <Text style={styles.optionalLoginText}>OR</Text>
+      <FormRegister />
       <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
         <Text style={styles.textButtonContinue}>
           <Text style={styles.GfromGoogle}>G</Text>Continue with Google
         </Text>
       </TouchableOpacity>
-      <Text style={styles.conditions}>By proceeding, you agree with Terms of Use & Privacy Policy.</Text>
+      <Text style={styles.conditions}>
+        By proceeding, you agree with Terms of Use & Privacy Policy.
+      </Text>
     </View>
   );
 };
@@ -72,34 +47,14 @@ const styles = StyleSheet.create({
   },
   conditions: {
     width: "85%",
-    marginTop: '15%',
+    marginTop: 15,
+    marginBottom: 15,
     color: "#FFF",
     fontFamily: "Roboto",
     fontSize: 25,
     fontWeight: "500",
     textAlign: "center",
-    marginHorizontal: 'auto'
-  },
-  inputs: {
-    backgroundColor: "#6053DD",
-    color: "#fff",
-    width: "100%",
-    height: 50,
-    borderRadius: 5,
-    paddingLeft: 10,
-    fontFamily: "Roboto",
-    fontSize: 20,
-    letterSpacing: 2,
-  },
-  boxPassword: {
-    borderRadius: 5,
-    marginTop: 10,
-    marginBottom: 40,
-    backgroundColor: "#6053DD",
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    marginHorizontal: "auto",
   },
   GfromGoogle: {
     fontSize: 50,
@@ -108,7 +63,7 @@ const styles = StyleSheet.create({
   },
   continueGoogle: {
     width: "85%",
-    paddingVertical: 10,
+    paddingVertical: 1,
     marginHorizontal: "auto",
     backgroundColor: "transparent",
     border: 20,
@@ -116,48 +71,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: "center",
   },
-  inputsLabel: {
-    marginTop: 20,
-    marginBottom: 10,
-    color: "#fff",
-    fontFamily: "Roboto",
-    fontSize: 30,
-  },
-  buttonSend: {
-    textAlign: "center",
-    backgroundColor: "#CAF99B",
-    borderRadius: 5,
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    paddingVertical: 7,
-    width: "85%",
-    height: 50,
-    marginHorizontal: "auto",
-  },
-  textSendButton: {
-    letterSpacing: 2,
-    fontWeight: "500",
-    fontSize: 16,
-    color: "black",
-    paddingVertical: "auto",
-  },
   forgotPassword: {
     width: "80%",
     marginHorizontal: "auto",
     textAlign: "right",
-    marginVertical: 10,
     color: "#fff",
-  },
-  optionalLoginText: {
-    marginTop: 35,
-    letterSpacing: 4,
-    color: "#fff",
-    marginVertical: 15,
-    fontFamily: "Roboto",
-    fontSize: 30,
-    textAlign: "center",
-    fontWeight: "200",
   },
   textButtonContinue: {
     color: "#FFF",
@@ -169,9 +87,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   boxTittles: {
-    marginTop: 30,
+    marginTop: 18,
     backgroundColor: "#130040",
-    paddingVertical: 30,
+    paddingVertical: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
