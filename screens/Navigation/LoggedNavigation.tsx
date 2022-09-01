@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-
 // screens
 import Home from "../Home";
 import Blog from "../Blog";
@@ -26,7 +25,7 @@ function MyTabs() {
         name="Home"
         component={Home}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: "Home",
           headerShown: false,
         }}
       />
@@ -34,7 +33,7 @@ function MyTabs() {
         name="Blog"
         component={Blog}
         options={{
-          tabBarLabel: 'News',
+          tabBarLabel: "News",
           headerShown: false,
         }}
       />

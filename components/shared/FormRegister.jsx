@@ -16,7 +16,6 @@ import { useForm, Controller } from "react-hook-form";
 
 export const FormRegister = () => {
   const [viewPassowrd, setViewPassowrd] = useState(false);
-
   const {
     control,
     handleSubmit,

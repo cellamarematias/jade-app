@@ -1,41 +1,38 @@
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import { googleLogin } from "../src/firebase/Firebase";
+import { app } from "../../src/firebase/Firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import { FormLogin } from "../components/shared/FormLogin";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 
-const Login: React.FC = () => {
-  const navigation: any = useNavigation();
+export function ButtonGoogleLogin() {
+  const navigation = useNavigation();
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const googleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((UserCredentials) => {
+        const userToJSON = JSON.stringify(
+          UserCredentials._tokenResponse.idToken
+        );
+        AsyncStorage.setItem("token", userToJSON);
+        navigation.navigate("Home");
+				changeAuth
+				console.log(isAuth);
+      })
+      .catch((_err) => {
+        AsyncStorage.setItem("token", "");
+      });
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.boxTittles}>
-        <View>
-          <Text style={styles.textTittle}>Log In</Text>
-          <View style={styles.borderBot}></View>
-        </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={styles.textTittle}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-      <FormLogin />
-      <Text style={styles.forgotPassword}>Forgot your password ?</Text>
-      <ButtonGoogleLogin />
-      {/* <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>
-          <Text style={styles.GfromGoogle}>G</Text>Continue with Google
-        </Text>
-      </TouchableOpacity> */}
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.textCreateAccount}>Don't have an account?</Text>
-        <View style={styles.boxCreateAccount}>
-          <Text style={styles.createAccount}>Create Account</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
+      <Text style={styles.textButtonContinue}>
+        <Text style={styles.GfromGoogle}>G</Text>Continue with Google
+      </Text>
+    </TouchableOpacity>
   );
-};
-
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -139,5 +136,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#CAF99B",
   },
 });
-
-export default Login;

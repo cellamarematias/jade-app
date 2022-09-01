@@ -1,34 +1,25 @@
-import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect } from "react";
 import LoggedNavigation from "./LoggedNavigation";
 import NotLoggedNavigation from "./NotLoggedNavigation";
 import { StatusBar } from "expo-status-bar";
+import { auth } from "../../src/firebase/Firebase";
 
-function ScreensNavigation() {
-  const [auth, setAuth] = useState("");
-  const checkUser = async () => {
-    try {
-      const value = await AsyncStorage.getItem("token");
-      const resp = JSON.parse(value);
-      setAuth(resp);
-      console.log(resp);
-    } catch (e) {
-      // error reading value
-    }
-  };
-  checkUser();
-
-  return auth === null || auth === "" ? (
+export function ScreensNavigation() {
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    auth.onAuthStateChanged((response) => {
+      setuser(response);
+    });
+  }, [user]);
+  return user === null ? (
     <>
-        <StatusBar style="light" />
-        <NotLoggedNavigation />
+      <StatusBar style="light" />
+      <NotLoggedNavigation />
     </>
   ) : (
     <>
-    <StatusBar style="light" />
-    <LoggedNavigation />
+      <StatusBar style="light" />
+      <LoggedNavigation />
     </>
   );
 }
-
-export default ScreensNavigation;

@@ -2,20 +2,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { googleLogin, createUser } from "../src/firebase/Firebase";
+import { googleLogin } from "../src/firebase/Firebase";
 import { FormRegister } from "../components/shared/FormRegister";
 
 const Register = () => {
   const navigation: any = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [viewPassowrd, setViewPassowrd] = useState<boolean>(true);
-
   return (
     <View style={styles.container}>
       <View style={styles.boxTittles}>
