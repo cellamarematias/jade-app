@@ -21,11 +21,6 @@ const Login: React.FC = () => {
       <FormLogin />
       <Text style={styles.forgotPassword}>Forgot your password ?</Text>
       <ButtonGoogleLogin />
-      {/* <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>
-          <Text style={styles.GfromGoogle}>G</Text>Continue with Google
-        </Text>
-      </TouchableOpacity> */}
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={styles.textCreateAccount}>Don't have an account?</Text>
         <View style={styles.boxCreateAccount}>
