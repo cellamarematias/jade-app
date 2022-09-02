@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getAuth,
@@ -32,8 +31,6 @@ export function emailAndPasswordLogin(email: string, password: string): any {
         userCredentials._tokenResponse.idToken
       );
       AsyncStorage.setItem("token", userToJSON);
-      const navigation: any = useNavigation();
-      navigation.navigate("Home");
     })
     .catch((err) => {
       AsyncStorage.setItem("token", "");
@@ -44,12 +41,11 @@ export function googleLogin() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
     .then((UserCredentials: any) => {
-      console.log("result", UserCredentials._tokenResponse.idToken);
+      console.log("result a ver", UserCredentials._tokenResponse.idToken);
       const userToJSON: string = JSON.stringify(
         UserCredentials._tokenResponse.idToken
       );
       AsyncStorage.setItem("token", userToJSON);
-      // changeAuth();
     })
     .catch((_err) => {
       AsyncStorage.setItem("token", "");

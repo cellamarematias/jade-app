@@ -6,7 +6,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
 export function ButtonGoogleLogin() {
-  const navigation = useNavigation();
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const googleLogin = () => {
@@ -16,9 +15,6 @@ export function ButtonGoogleLogin() {
           UserCredentials._tokenResponse.idToken
         );
         AsyncStorage.setItem("token", userToJSON);
-        navigation.navigate("Home");
-				changeAuth
-				console.log(isAuth);
       })
       .catch((_err) => {
         AsyncStorage.setItem("token", "");

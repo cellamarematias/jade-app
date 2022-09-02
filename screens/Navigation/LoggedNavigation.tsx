@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 // screens
 import Home from "../Home";
 import Blog from "../Blog";
+import Settings from "../Settings";
 
 const Tab: any = createBottomTabNavigator();
 
@@ -39,7 +40,14 @@ function MyTabs() {
       />
       {/* <Tab.Screen name='Conversor' component={Conversor} /> */}
       {/* <Tab.Screen name='Porfolio' component={Porfolio} /> */}
-      {/* <Tab.Screen name='Settings' component={Settings} /> */}
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarLabel: "Settings",
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 }

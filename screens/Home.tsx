@@ -1,7 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { app } from "../src/firebase/Firebase";
 import LogOutButton from "../components/shared/LogOutButton";
 
 const Home = () => {

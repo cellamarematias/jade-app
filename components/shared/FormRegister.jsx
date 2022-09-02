@@ -11,11 +11,15 @@ import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
 } from "../../src/typesAndConsts";
-import { createUser } from "../../src/firebase/Firebase";
+import { createUser, database } from "../../src/firebase/Firebase";
+import { collection, addDoc } from "firebase/firestore";
 import { useForm, Controller } from "react-hook-form";
+
+// ver los useState con boolean
 
 export const FormRegister = () => {
   const [viewPassowrd, setViewPassowrd] = useState(false);
+  const [isEmailAvailable, setIsEmailAvailable] = useState(true);
   const {
     control,
     handleSubmit,
@@ -29,8 +33,13 @@ export const FormRegister = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    createUser(data.email, data.password);
+  const onSubmit = async (data) => {
+    try {
+      await createUser(data.email, data.password);
+      await addDoc(collection(database, "users"), data);
+    } catch (error) {
+      setIsEmailAvailable(false);
+    }
   };
   return (
     <View style={styles.container}>
@@ -116,6 +125,9 @@ export const FormRegister = () => {
         />
         <Text style={styles.msgError}>
           {errors.email && errors.email.message}
+        </Text>
+        <Text style={styles.msgError}>
+          {isEmailAvailable ? "" : "Email already in use"}
         </Text>
       </View>
       <View>
