@@ -1,12 +1,7 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { googleLogin } from "../src/firebase/Firebase";
 import { FormRegister } from "../components/shared/FormRegister";
+import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 
 const Register = () => {
   const navigation: any = useNavigation();
@@ -22,11 +17,7 @@ const Register = () => {
         </View>
       </View>
       <FormRegister />
-      <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>
-          <Text style={styles.GfromGoogle}>G</Text>Continue with Google
-        </Text>
-      </TouchableOpacity>
+      <ButtonGoogleLogin />
       <Text style={styles.conditions}>
         By proceeding, you agree with Terms of Use & Privacy Policy.
       </Text>

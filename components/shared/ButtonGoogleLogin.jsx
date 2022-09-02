@@ -5,13 +5,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 
-// interface UserLogged {
-//   firstname: string;
-//   lastname: string;
-//   email: string;
-//   uid: string;
-// }
-
 export function ButtonGoogleLogin() {
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();

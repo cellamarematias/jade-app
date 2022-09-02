@@ -4,8 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getAuth,
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import firebase from "firebase/compat/app";
@@ -34,21 +32,6 @@ export function emailAndPasswordLogin(email: string, password: string): any {
       AsyncStorage.setItem("token", userToJSON);
     })
     .catch((err) => {
-      AsyncStorage.setItem("token", "");
-    });
-}
-// login with google
-export function googleLogin() {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then((UserCredentials: any) => {
-      console.log("cREDENTIASL GOOGLE", UserCredentials);
-      const userToJSON: string = JSON.stringify(
-        UserCredentials._tokenResponse.idToken
-      );
-      AsyncStorage.setItem("token", userToJSON);
-    })
-    .catch((_err) => {
       AsyncStorage.setItem("token", "");
     });
 }

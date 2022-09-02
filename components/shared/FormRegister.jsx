@@ -11,9 +11,12 @@ import {
   EMAIL_REGEX,
   PASSWORD_REGEX,
 } from "../../src/typesAndConsts";
-import { createUser, database } from "../../src/firebase/Firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { database, auth } from "../../src/firebase/Firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { useForm, Controller } from "react-hook-form";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import "firebase/compat/auth";
 
 // ver los useState con boolean
 
@@ -33,13 +36,23 @@ export const FormRegister = () => {
     },
   });
 
-  const onSubmit = async (data) => {
-    try {
-      await createUser(data.email, data.password);
-      await addDoc(collection(database, "users"), data);
-    } catch (error) {
-      setIsEmailAvailable(false);
-    }
+  const onSubmit = (data) => {
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then(async (resp) => {
+        const userLogged = {
+          firstname: data.name,
+          lastname: data.lastname,
+          email: data.email,
+          uid: resp?.user?.uid,
+          password: data.password,
+        };
+        const userToJSON = JSON.stringify(userLogged);
+        AsyncStorage.setItem("user", userToJSON);
+        await addDoc(collection(database, "users"), userLogged);
+      })
+      .catch((err) => {
+        AsyncStorage.setItem("user", "");
+      });
   };
   return (
     <View style={styles.container}>
