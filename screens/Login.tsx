@@ -13,6 +13,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { app } from "../src/firebase/firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { database } from "../src/firebase/firebaseConfig";
 
 const Login = () => {
   const navigation: any = useNavigation();

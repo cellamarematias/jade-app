@@ -1,15 +1,40 @@
-import { async } from "@firebase/util";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TextInput, StatusBar } from "react-native";
+import { View, Text, StyleSheet, FlatList, TextInput, StatusBar, TouchableOpacity } from "react-native";
 import CoinItem from "../components/CoinItem";
+import { database } from "../src/firebase/firebaseConfig";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { NavigationContainer } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+
+
+let favo = [];
 
 
 
-const Favs = () => {
+const MyCoins = ({ navigation }) => {
+  const [ favs, setFavs ] = useState([]);
+	const [ favs2, setFavs2 ] = useState([]);
+
+
+	console.log(typeof(favs[0]))
+
+	let uid = '';
+
+	const readFavs = async () => {
+		uid = await AsyncStorage.getItem('uid');
+		const q = query(collection(database, "favs"), where("uid", "==", uid));
+		const querySnapshot = await getDocs(q);
+		querySnapshot.forEach((doc) => {
+			favo.push(doc.data().coin)
+			setFavs(favs => [...favs, doc.data().coin]);
+	});
+	}
+
+
 	const [ coins, setCoins ] = useState([]);
 	const [ search, setSearch ] = useState('');
 	const [ refreshing, setRefreshing ] = useState(false)
-	const [ favs, setFavs ] = useState([]);
 
 	const loadData = async () => {
 		const res: any = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
@@ -17,17 +42,47 @@ const Favs = () => {
 		setCoins(data);
 	}
 
+		// join both array with the matches
+	const filter = coins.filter(coin => {
+			if (favs.includes(coin.name)) {
+				return coin;
+				}
+		});
+
+	console.log(filter);
+
+
 	useEffect(() => {
-		console.log('loaded');
+		//console.log('soy el useEffect');
 		loadData();
+		readFavs();
 	}, []);
 
+
+  useFocusEffect(
+    React.useCallback(() => {
+			loadData();
+			readFavs();
+			console.log('soy el useEffect');
+    }, [])
+  );
+
+
+const changeTab = () => {
+	navigation.navigate('Market', { screen: 'Market' });
+}
 
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor="#141414"/>
 			<View style={styles.header}>
 				<Text style={styles.tittle}>Favourites</Text>
+				<Text
+				style={styles.tittle}
+				onPress={changeTab}
+				>See all →</Text>
+			</View>
+			<View style={styles.header}>
 				<TextInput style={styles.input}
 				autoCapitalize = {"none"}
 				placeholder="Search"
@@ -43,10 +98,7 @@ const Favs = () => {
 					setRefreshing(false);
 				}}
 				style={styles.list}
-				data={
-					coins.filter((coin) => coin.name.toLowerCase().includes(search) ||
-					coin.symbol.toLowerCase().includes(search))
-				}
+				data={filter}
         renderItem={({item}) => {
 					return <CoinItem coin={item}/>
 				}}
@@ -122,4 +174,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Favs;
+export default MyCoins;

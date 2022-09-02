@@ -11,7 +11,7 @@ function ScreensNavigation() {
       const value = await AsyncStorage.getItem("token");
       const resp = JSON.parse(value);
       setAuth(resp);
-      console.log(resp);
+      //console.log(resp);
     } catch (e) {
       // error reading value
     }

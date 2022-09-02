@@ -5,7 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 // screens
 import Home from "../Home";
 import Blog from "../Blog";
-import Favs from "../Favs";
+import Market from "../Market";
+import MyCoins from "../MyCoins";
 
 const Tab: any = createBottomTabNavigator();
 
@@ -40,10 +41,18 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Favs"
-        component={Favs}
+        name="Market"
+        component={Market}
         options={{
-          tabBarLabel: 'Favs',
+          tabBarLabel: 'Market',
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="MyCoins"
+        component={MyCoins}
+        options={{
+          tabBarLabel: 'My Coins',
           headerShown: false,
         }}
       />

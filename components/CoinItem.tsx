@@ -1,10 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { database } from "../src/firebase/firebaseConfig";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const CoinItem = ({coin}) => {
+	// observador de ususario
+	const auth = getAuth();
+	onAuthStateChanged(auth, (user) => {
+		//funcion para guardar el id del ususario en la session
+		const storeData = async (value) => {
+			try {
+				await AsyncStorage.setItem('uid', value)
+			} catch (e) {
+				// saving error
+			}
+		}
+		if (user) {
+			let uid = user.uid;
+			storeData(uid);
+			// ...
+		} else {
+			// User is signed out
+			// ...
+		}
+	});
+
+	let uid = '';
+
+	const save = async (coin: any) => {
+		uid = await AsyncStorage.getItem('uid');
+		console.log('dentro de la funcion save ', uid)
+		try {
+			const docRef = await addDoc(collection(database, "favs"), {
+				uid,
+				coin,
+			});
+			console.log("Document written with ID: ", docRef.id);
+		} catch (e) {
+			console.error("Error adding document: ", e);
+		}
+	}
+
 	const onPress = () => {
+		save(coin.name);
 		console.log(coin.name);
 	}
+
   return (
 		<TouchableOpacity
 		onPress={onPress}
