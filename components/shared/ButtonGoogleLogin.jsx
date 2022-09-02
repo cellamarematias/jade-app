@@ -1,20 +1,51 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
-import { app } from "../../src/firebase/Firebase";
+import { app, database } from "../../src/firebase/Firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+
+// interface UserLogged {
+//   firstname: string;
+//   lastname: string;
+//   email: string;
+//   uid: string;
+// }
 
 export function ButtonGoogleLogin() {
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const googleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((UserCredentials) => {
-        const userToJSON = JSON.stringify(
-          UserCredentials._tokenResponse.idToken
-        );
-        AsyncStorage.setItem("token", userToJSON);
+      .then(async (UserCredentials) => {
+        const completeNameUser = UserCredentials.user.displayName.split(" ");
+        const userLogged = {
+          firstname: completeNameUser[0],
+          lastname: completeNameUser[1],
+          email: UserCredentials.user.email,
+          uid: UserCredentials.user.uid,
+        };
+        console.log("userLogged", userLogged);
+        // lo guardo en logalstorage
+        const userToJSON = JSON.stringify(userLogged);
+        AsyncStorage.setItem("user", userToJSON);
+        // traigo los usuarios de firestore
+        const querySnapshot = await getDocs(collection(database, "users"));
+        const response = await querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+        // hago checkeos si esta registrado en Firestore o no
+        if (!(userLogged.email === undefined)) {
+          let isRegistered = false;
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].email === userLogged.email) {
+              isRegistered = true;
+            }
+          }
+          if (!isRegistered) {
+            addDoc(collection(database, "users"), userLogged);
+          }
+        }
       })
       .catch((_err) => {
         AsyncStorage.setItem("token", "");

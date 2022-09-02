@@ -6,9 +6,25 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = () => {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const getUser = async () => {
+    const userLogged = await AsyncStorage.getItem("user");
+    const userConvert = JSON.parse(userLogged);
+    setFirstName(userConvert.firstname);
+    setLastName(userConvert.lastname);
+    setEmail(userConvert.email);
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const saveChanges = () => {};
   return (
     <View>
       <Text>Settings</Text>
@@ -27,15 +43,27 @@ const Settings = () => {
       <View>
         <View>
           <Text>First Name</Text>
-          <TextInput placeholder="First Name" />
+          <TextInput
+            onChangeText={(text) => setFirstName(text)}
+            placeholder={firstName}
+            value={firstName}
+          />
         </View>
         <View>
           <Text>Last Name</Text>
-          <TextInput placeholder="Last Name" />
+          <TextInput
+            onChangeText={(text) => setLastName(text)}
+            placeholder={lastName}
+            value={lastName}
+          />
         </View>
         <View>
           <Text>Email</Text>
-          <TextInput placeholder="email" />
+          <TextInput
+            onChangeText={(text) => setEmail(text)}
+            placeholder={email}
+            value={email}
+          />
         </View>
         <View>
           <Text>Wallet</Text>
@@ -43,7 +71,7 @@ const Settings = () => {
             <Text>Connect</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => saveChanges()}>
           <Text>Save</Text>
         </TouchableOpacity>
       </View>

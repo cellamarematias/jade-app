@@ -11,6 +11,7 @@ import {
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyBF8gisRvhq_52RsFAirZ42mJKbFu-AKSM",
   authDomain: "jade-10af5.firebaseapp.com",
@@ -41,7 +42,7 @@ export function googleLogin() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
     .then((UserCredentials: any) => {
-      console.log("result a ver", UserCredentials._tokenResponse.idToken);
+      console.log("cREDENTIASL GOOGLE", UserCredentials);
       const userToJSON: string = JSON.stringify(
         UserCredentials._tokenResponse.idToken
       );
