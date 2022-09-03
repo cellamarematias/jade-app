@@ -1,15 +1,12 @@
 import React from "react";
-import { View, Text } from 'react-native';
-import NavBar from "../components/navbar/BottomTab";
-
+import { View, Text, StyleSheet } from "react-native";
+import Navigation from "./Navigation/LoggedNavigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
-	return (
-		<View>
-			<Text>Home</Text>
-		<NavBar />
-		</View>
-	)
-}
+  // si queremos reloguer, descomentar la linea de abajo y recargar
+  // AsyncStorage.setItem("token", "");
+  return <Text>Home screen</Text>;
+};
 
 export default Home;
