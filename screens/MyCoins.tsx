@@ -1,71 +1,84 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar, TouchableOpacity } from "react-native";
 import CoinItem from "../components/CoinItem";
+import MyCoinsItem from "../components/MyCoinsItem";
 import { database } from "../src/firebase/firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { NavigationContainer } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
-
-let favo = [];
-
-
+let filteredCoins = [];
 
 const MyCoins = ({ navigation }) => {
+	const [isLoading, setIsLoading] = useState(true);
+	const initialState = [];
   const [ favs, setFavs ] = useState([]);
-	const [ favs2, setFavs2 ] = useState([]);
-
-
-	console.log(typeof(favs[0]))
-
+  const [ favCoins, setFavCoins ] = useState([]);
+	const [ coins, setCoins ] = useState([]);
+	const [ search, setSearch ] = useState('');
+	const [ refreshing, setRefreshing ] = useState(false)
 	let uid = '';
+
+	const resetState = () => {
+    setFavs([]);
+		setFavCoins([]);
+  };
+
+  useEffect(() => {
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+      .then((response) => response.json())
+      .then((data) => {
+        setCoins(data);
+        setIsLoading(false);
+      })
+			.then((response) => readFavs())
+  }, []);
 
 	const readFavs = async () => {
 		uid = await AsyncStorage.getItem('uid');
 		const q = query(collection(database, "favs"), where("uid", "==", uid));
 		const querySnapshot = await getDocs(q);
+		resetState();
 		querySnapshot.forEach((doc) => {
-			favo.push(doc.data().coin)
 			setFavs(favs => [...favs, doc.data().coin]);
-	});
+	})
+
+	setTimeout(function(){
+		filter();
+		setFavCoins(filteredCoins);
+	}, 2000);
+
 	}
 
-
-	const [ coins, setCoins ] = useState([]);
-	const [ search, setSearch ] = useState('');
-	const [ refreshing, setRefreshing ] = useState(false)
-
-	const loadData = async () => {
-		const res: any = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
-		const data: any = await res.json();
-		setCoins(data);
-	}
-
-		// join both array with the matches
-	const filter = coins.filter(coin => {
-			if (favs.includes(coin.name)) {
-				return coin;
+	const filter = () => {
+		console.log('dentro de filter', coins.length);
+		filteredCoins = [];
+		coins.filter((coin) =>{
+			for (let i = 0; i < favs.length; i++) {
+				if(favs[i].name === coin.name)
+				{
+					filteredCoins.push(coin)
 				}
-		});
+			}
+		} )
+		setFavCoins(filteredCoins);
+		console.log('al final de filter', filteredCoins.length)
+	}
 
-	console.log(filter);
-
+	useFocusEffect(
+		React.useCallback(() => {
+			readFavs();
+			filter();
+		}, [])
+	);
 
 	useEffect(() => {
-		//console.log('soy el useEffect');
-		loadData();
 		readFavs();
-	}, []);
+		filter();
+  }, []);
 
-
-  useFocusEffect(
-    React.useCallback(() => {
-			loadData();
-			readFavs();
-			console.log('soy el useEffect');
-    }, [])
-  );
+console.log(filteredCoins.length)
 
 
 const changeTab = () => {
@@ -94,13 +107,13 @@ const changeTab = () => {
 				refreshing={refreshing}
 				onRefresh={ async () => {
 					setRefreshing(true);
-					await loadData();
+					await filter();
 					setRefreshing(false);
 				}}
 				style={styles.list}
-				data={filter}
+				data={filteredCoins}
         renderItem={({item}) => {
-					return <CoinItem coin={item}/>
+					return <MyCoinsItem coin={item}/>
 				}}
 				showsVerticalScrollIndicator={false}
 				/>

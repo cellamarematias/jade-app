@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { collection, addDoc, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from "firebase/firestore";
 import { database } from "../src/firebase/firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+let uid = '';
+let docId = '';
 
-
-const CoinItem = ({coin}) => {
+const MyCoinsItem = ({coin}) => {
 	// observador de ususario
 	const auth = getAuth();
 	onAuthStateChanged(auth, (user) => {
@@ -28,24 +29,24 @@ const CoinItem = ({coin}) => {
 		}
 	});
 
-	let uid = '';
-
-	const save = async (coin: any) => {
+	const deleteCoin = async (coin: any) => {
 		uid = await AsyncStorage.getItem('uid');
-		console.log('dentro de la funcion save ', uid)
 		try {
-			const docRef = await addDoc(collection(database, "favs"), {
-				uid,
-				coin,
-			});
-			console.log("Document written with ID: ", docRef.id);
-		} catch (e) {
-			console.error("Error adding document: ", e);
-		}
+			const q = query(collection(database, "favs"), where("uid", "==", uid), where("coin.name", "==", coin));
+			const querySnapshot = await getDocs(q);
+			querySnapshot.forEach((doc) => {
+				console.log(doc.id)
+				docId = doc.id
+		});
+			const docRef = doc(database, 'favs', docId);
+			deleteDoc(docRef)
+			} catch (e) {
+				console.error("Error deleting document: ", e);
+			}
 	}
 
 	const onPress = () => {
-		save(coin);
+		deleteCoin(coin.name);
 		console.log(coin.name);
 	}
 
@@ -66,6 +67,7 @@ const CoinItem = ({coin}) => {
 			<View>
 				<Text style={styles.textPrice}>${coin.current_price}</Text>
 				<Text style={[styles.pricePercentage, coin.price_change_percentage_24h > 0 ? styles.priceUp : styles.priceDwon]}>{coin.price_change_percentage_24h}</Text>
+				<Text>{coin.id}</Text>
 			</View>
 		</TouchableOpacity>
 	)
@@ -111,4 +113,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default CoinItem;
+export default MyCoinsItem;
