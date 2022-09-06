@@ -1,5 +1,4 @@
 import React from "react";
-import { googleLogin } from "../src/firebase/Firebase";
 import { useNavigation } from "@react-navigation/native";
 import { FormLogin } from "../components/shared/FormLogin";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";

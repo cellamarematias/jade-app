@@ -8,61 +8,84 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useForm, Controller } from "react-hook-form";
 import { NAME_REGEX, EMAIL_REGEX } from "../src/typesAndConsts";
-import { doc, updateDoc } from "firebase/firestore";
-import { database } from "../src/firebase/Firebase";
+import { doc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { app, database } from "../src/firebase/Firebase";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 
 const Settings = () => {
-  const [firstNameStorage, setFirstNameStorage] = useState("");
-  const [lastNameStorage, setLastNameStorage] = useState("");
-  const [emailStorage, setEmailStorage] = useState("");
-  const [uidStorage, setUidStorage] = useState("");
-  const [isEmailAvailable, setIsEmailAvailable] = useState(true);
+  const [firstnameForm, setFirstnameForm] = useState<string>("");
+  const [lastnameForm, setLastnameForm] = useState<string>("");
+  const [emailForm, setEmailForm] = useState<string>("");
+  const [idDoc, setIdDoc] = useState<string>("");
+  const [firstnameError, setFirstnameError] = useState<boolean>(true);
+  const [lastnameError, setLastnameError] = useState<boolean>(true);
+  const [emailError, setEmailError] = useState<boolean>(true);
+  const [emailExistence, setEmailExistence] = useState<boolean>(false);
+  const [emailLocalstorage, setEmailLocalStorage] = useState<string>("");
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    defaultValues: {
-      firstname: firstNameStorage,
-      lastname: lastNameStorage,
-      email: emailStorage,
-    },
-  });
-
-  const getUser = async () => {
-    const userLogged = await AsyncStorage.getItem("user");
-    const userConvert = JSON.parse(userLogged);
-    setFirstNameStorage(userConvert.firstname);
-    setLastNameStorage(userConvert.lastname);
-    setEmailStorage(userConvert.email);
-    setUidStorage(userConvert.uid);
-    // tampoco funciona
-    // const settingdata = {
-    //   firstname: firstNameStorage,
-    //   lastname: lastNameStorage,
-    //   email: emailStorage,
-    // };
-    // reset(settingdata);
-  };
   useEffect(() => {
     getUser();
   }, []);
 
-  const onSubmit = (data) => {
+  const getUser = async () => {
+    // uso el localstorage y traigo los datos del documento en cuestion
+    const userLogged = await AsyncStorage.getItem("user");
+    const userConvert = JSON.parse(userLogged);
+    setEmailLocalStorage(userConvert.email);
+    // obtengo el id del documento a cambiar
+    const querySnapshot = await getDocs(collection(database, "users"));
+    const documentRef = await querySnapshot.docs.map((doc) => ({
+      firstname: doc.data().firstname,
+      lastname: doc.data().lastname,
+      uid: doc.data().uid,
+      email: doc.data().email,
+      idDoc: doc.id,
+    }));
+    const response = documentRef.filter(
+      (doc) => doc.email === userConvert.email
+    );
+    setIdDoc(response[0].idDoc);
+    setFirstnameForm(response[0].firstname);
+    setLastnameForm(response[0].lastname);
+    setEmailForm(response[0].email);
+  };
+
+  const onSubmit = async () => {
     try {
-      console.log("uidStorage", uidStorage);
-      const docRef = doc(database, "/users", uidStorage);
-      updateDoc(docRef, {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        email: data.email,
-      });
-      // lo hace bien a lo de arriba pero no actualiza nada
-      console.log("llegamos al final");
+      const querySnapshot = await getDocs(collection(database, "users"));
+      const usersDatabase = await querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        email: doc.data().email,
+        firstname: doc.data().firstname,
+        lastname: doc.data().lastname,
+        uid: doc.data().uid,
+      }));
+      console.log("usersDatabase", usersDatabase);
+      const findEmail = usersDatabase.filter(
+        (user) => user.email === emailForm
+      );
+      if (findEmail.length !== 0 && findEmail[0].email !== emailLocalstorage) {
+        setEmailExistence(true);
+      } else {
+        setEmailExistence(false);
+        setFirstnameError(NAME_REGEX.test(firstnameForm));
+        setLastnameError(NAME_REGEX.test(lastnameForm));
+        setEmailError(EMAIL_REGEX.test(emailForm));
+      }
+      if (firstnameError && lastnameError && emailError && !emailExistence) {
+        try {
+          const docRef = doc(database, "users", idDoc);
+          updateDoc(docRef, {
+            firstname: firstnameForm,
+            lastname: lastnameForm,
+            email: emailForm,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -86,93 +109,42 @@ const Settings = () => {
       <View>
         <View>
           <Text style={styles.inputsLabel}>First name</Text>
-          <TextInput placeholder="first name" />
-          {/* <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Name is required *",
-              },
-              pattern: {
-                value: NAME_REGEX,
-                message: "First Name must have only letters*",
-              },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={[styles.inputs, errors.firstname && styles.errorInput]}
-                onChangeText={onChange}
-                value={value}
-                // placeholder={firstNameStorage}
-              />
-            )}
-            name="firstname"
+          <TextInput
+            style={styles.inputs}
+            value={firstnameForm}
+            placeholder="first name"
+            onChangeText={(text) => setFirstnameForm(text)}
           />
-          <Text style={styles.msgError}>
-            {errors.firstname && errors.firstname.message}
-          </Text> */}
+          {firstnameError ? null : (
+            <Text style={styles.msgError}>* invalid first name</Text>
+          )}
         </View>
         <View>
           <Text style={styles.inputsLabel}>Last Name</Text>
-          <TextInput placeholder="last name" />
-          {/* <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Last Name is required *",
-              },
-              pattern: {
-                value: NAME_REGEX,
-                message: "Last Name must have only letters*",
-              },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={[styles.inputs, errors.lastname && styles.errorInput]}
-                onChangeText={onChange}
-                value={value}
-                placeholder={lastNameStorage}
-              />
-            )}
-            name="lastname"
+          <TextInput
+            style={styles.inputs}
+            value={lastnameForm}
+            placeholder="last name"
+            onChangeText={(text) => setLastnameForm(text)}
           />
-          <Text style={styles.msgError}>
-            {errors.lastname && errors.lastname.message}
-          </Text> */}
+          {lastnameError ? null : (
+            <Text style={styles.msgError}>* invalid last name</Text>
+          )}
         </View>
         <View>
           <Text style={styles.inputsLabel}>Email</Text>
-          <TextInput placeholder="email" />
-          {/* <Controller
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: "Email is required *",
-              },
-              pattern: {
-                value: EMAIL_REGEX,
-                message: "Please enter a valid email *",
-              },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={[styles.inputs, errors.email && styles.errorInput]}
-                onChangeText={onChange}
-                value={value}
-                placeholder={emailStorage}
-              />
-            )}
-            name="email"
+          <TextInput
+            style={[styles.inputs, emailExistence && styles.errorInput]}
+            value={emailForm}
+            placeholder="email"
+            onChangeText={(text) => setEmailForm(text)}
           />
-          <Text style={styles.msgError}>
-            {errors.email && errors.email.message}
-          </Text> */}
-          <Text style={styles.msgError}>
-            {isEmailAvailable ? "" : "Email already in use"}
-          </Text>
+          {emailExistence ? (
+            <Text style={styles.msgError}>* Email already in use</Text>
+          ) : null}
+          {emailError ? null : (
+            <Text style={styles.msgError}>* invalid email</Text>
+          )}
         </View>
         <View>
           <Text>Wallet</Text>
@@ -180,10 +152,7 @@ const Settings = () => {
             <Text>Connect</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.buttonSend}
-          onPress={handleSubmit(onSubmit)}
-        >
+        <TouchableOpacity style={styles.buttonSend} onPress={onSubmit}>
           <Text style={styles.textSendButton}>Save Changes</Text>
         </TouchableOpacity>
       </View>
@@ -210,7 +179,7 @@ const styles = StyleSheet.create({
   msgError: {
     paddingTop: 4,
     height: 8,
-    color: "#fff",
+    color: "red",
   },
   msgErrorPassword: {
     height: 8,
