@@ -18,8 +18,6 @@ import { useForm, Controller } from "react-hook-form";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import "firebase/compat/auth";
 
-// ver los useState con boolean
-
 export const FormRegister = () => {
   const [viewPassowrd, setViewPassowrd] = useState(false);
   const [isEmailAvailable, setIsEmailAvailable] = useState(true);
