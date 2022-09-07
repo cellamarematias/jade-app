@@ -48,7 +48,7 @@ const Conversor = () => {
 
   return (
     <View style={styles.body}>
-      <Text style={styles.title}>Conversor</Text>
+      <Text style={styles.title}>Converter</Text>
       <View>
         <Text style={styles.text}>Quantity</Text>
         <TextInput

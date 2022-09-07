@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FormRegister } from "../components/shared/FormRegister";
 import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
@@ -6,22 +12,24 @@ import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 const Register = () => {
   const navigation: any = useNavigation();
   return (
-    <View style={styles.container}>
-      <View style={styles.boxTittles}>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.textTittle}>Log In</Text>
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.textTittle}>Sign Up</Text>
-          <View style={styles.borderBot}></View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.boxTittles}>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.textTittle}>Log In</Text>
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.textTittle}>Sign Up</Text>
+            <View style={styles.borderBot}></View>
+          </View>
         </View>
+        <FormRegister />
+        <ButtonGoogleLogin />
+        <Text style={styles.conditions}>
+          By proceeding, you agree with Terms of Use & Privacy Policy.
+        </Text>
       </View>
-      <FormRegister />
-      <ButtonGoogleLogin />
-      <Text style={styles.conditions}>
-        By proceeding, you agree with Terms of Use & Privacy Policy.
-      </Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -36,7 +44,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "#FFF",
     fontFamily: "Roboto",
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: "500",
     textAlign: "center",
     marginHorizontal: "auto",

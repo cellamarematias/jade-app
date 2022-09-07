@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
   },
   inputsLabel: {
     marginTop: 17,
+    marginBottom: 8,
     color: "#fff",
     fontFamily: "Roboto",
     fontSize: 30,

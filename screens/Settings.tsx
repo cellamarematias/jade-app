@@ -1,7 +1,7 @@
 import {
   View,
   Text,
-  Image,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   TextInput,
@@ -90,68 +90,70 @@ const Settings = () => {
   };
 
   return (
-    <View style={styles.body}>
-      <Text style={styles.title}>Settings</Text>
-      <View>
-        <View style={styles.boxInput}>
-          <Text style={styles.inputsLabel}>First name</Text>
-          <TextInput
-            style={styles.inputs}
-            value={firstnameForm}
-            placeholder="first name"
-            onChangeText={(text) => setFirstnameForm(text)}
-          />
-          {firstnameError ? null : (
-            <Text style={styles.msgError}>* invalid first name</Text>
-          )}
-        </View>
-        <View style={styles.boxInput}>
-          <Text style={styles.inputsLabel}>Last Name</Text>
-          <TextInput
-            style={styles.inputs}
-            value={lastnameForm}
-            placeholder="last name"
-            onChangeText={(text) => setLastnameForm(text)}
-          />
-          {lastnameError ? null : (
-            <Text style={styles.msgError}>* invalid last name</Text>
-          )}
-        </View>
-        <View style={styles.boxInput}>
-          <Text style={styles.inputsLabel}>Email</Text>
-          <TextInput
-            style={[styles.inputs, emailExistence && styles.errorInput]}
-            value={emailForm}
-            placeholder="email"
-            onChangeText={(text) => setEmailForm(text)}
-          />
-          {emailExistence ? (
-            <Text style={styles.msgError}>* Email already in use</Text>
-          ) : null}
-          {emailError ? null : (
-            <Text style={styles.msgError}>* invalid email</Text>
-          )}
-        </View>
-        <Text style={styles.inputsLabel}>Wallet : </Text>
-        <View style={styles.boxPassword}>
-          <TouchableOpacity>
-            <Text style={styles.inputs}>Connect</Text>
+    <ScrollView>
+      <View style={styles.body}>
+        <Text style={styles.title}>Settings</Text>
+        <View>
+          <View style={styles.boxInput}>
+            <Text style={styles.inputsLabel}>First name</Text>
+            <TextInput
+              style={styles.inputs}
+              value={firstnameForm}
+              placeholder="first name"
+              onChangeText={(text) => setFirstnameForm(text)}
+            />
+            {firstnameError ? null : (
+              <Text style={styles.msgError}>* invalid first name</Text>
+            )}
+          </View>
+          <View style={styles.boxInput}>
+            <Text style={styles.inputsLabel}>Last Name</Text>
+            <TextInput
+              style={styles.inputs}
+              value={lastnameForm}
+              placeholder="last name"
+              onChangeText={(text) => setLastnameForm(text)}
+            />
+            {lastnameError ? null : (
+              <Text style={styles.msgError}>* invalid last name</Text>
+            )}
+          </View>
+          <View style={styles.boxInput}>
+            <Text style={styles.inputsLabel}>Email</Text>
+            <TextInput
+              style={[styles.inputs, emailExistence && styles.errorInput]}
+              value={emailForm}
+              placeholder="email"
+              onChangeText={(text) => setEmailForm(text)}
+            />
+            {emailExistence ? (
+              <Text style={styles.msgError}>* Email already in use</Text>
+            ) : null}
+            {emailError ? null : (
+              <Text style={styles.msgError}>* invalid email</Text>
+            )}
+          </View>
+          <Text style={styles.inputsLabel}>Wallet : </Text>
+          <View style={styles.boxPassword}>
+            <TouchableOpacity>
+              <Text style={styles.inputs}>Connect</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.buttonSend} onPress={onSubmit}>
+            <Text style={styles.textSendButton}>Save Changes</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.buttonSend} onPress={onSubmit}>
-          <Text style={styles.textSendButton}>Save Changes</Text>
-        </TouchableOpacity>
+        <View style={styles.footer}>
+          <Text style={styles.textFooter}>Password</Text>
+          <Text style={styles.textSecondaryFooter}>
+            Set a unique password to protect your personal account.
+          </Text>
+          <TouchableOpacity style={[styles.buttonSend, styles.changePassword]}>
+            <Text style={styles.textSendButton}>Change Password</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.footer}>
-        <Text style={styles.textFooter}>Password</Text>
-        <Text style={styles.textSecondaryFooter}>
-          Set a unique password to protect your personal account.
-        </Text>
-        <TouchableOpacity style={[styles.buttonSend, styles.changePassword]}>
-          <Text style={styles.textSendButton}>Change Password</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
     marginVertical: 3,
   },
   footer: {
-    marginTop: "5%",
+    marginVertical: "5%",
     borderTopColor: "#6053DD",
     borderBottomColor: "transparent",
     borderRightColor: "transparent",

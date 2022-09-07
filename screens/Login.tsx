@@ -20,7 +20,7 @@ const Login: React.FC = () => {
       <FormLogin />
       <Text style={styles.forgotPassword}>Forgot your password ?</Text>
       <ButtonGoogleLogin />
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+      <TouchableOpacity style={styles.boxRegister} onPress={() => navigation.navigate("Register")}>
         <Text style={styles.textCreateAccount}>Don't have an account?</Text>
         <View style={styles.boxCreateAccount}>
           <Text style={styles.createAccount}>Create Account</Text>
@@ -31,6 +31,9 @@ const Login: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  boxRegister: {
+    backgroundColor: "#130040",
+  },
   container: {
     flex: 1,
     backgroundColor: "#130040",
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   createAccount: {
-    marginTop: 10,
+    paddingTop: 10,
     color: "#FFF",
     fontFamily: "Roboto",
     fontSize: 25,
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   boxCreateAccount: {
-    width: "42%",
+    paddingVertical: 20,
     marginHorizontal: "auto",
   },
   boxTittles: {
