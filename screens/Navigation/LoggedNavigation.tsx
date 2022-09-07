@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 // screens
 import Home from "../Home";
 import Blog from "../Blog";
+import Conversor from "../Conversor";
 import Settings from "../Settings";
 
 const Tab: any = createBottomTabNavigator();
@@ -11,7 +12,7 @@ const Tab: any = createBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Conversor"
       tabBarOptions={{
         activeTintColor: "#CAF99B",
         activeBackgroundColor: "#32089A",
@@ -38,7 +39,14 @@ function MyTabs() {
           headerShown: false,
         }}
       />
-      {/* <Tab.Screen name='Conversor' component={Conversor} /> */}
+      <Tab.Screen
+        name="Conversor"
+        component={Conversor}
+        options={{
+          tabBarLabel: "Conversor",
+          headerShown: false,
+        }}
+      />
       {/* <Tab.Screen name='Porfolio' component={Porfolio} /> */}
       <Tab.Screen
         name="Settings"
