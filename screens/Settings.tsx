@@ -10,8 +10,7 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NAME_REGEX, EMAIL_REGEX } from "../src/typesAndConsts";
 import { doc, updateDoc, getDocs, collection } from "firebase/firestore";
-import { app, database } from "../src/firebase/Firebase";
-import firebase from "firebase/compat/app";
+import { database } from "../src/firebase/Firebase";
 import "firebase/compat/auth";
 
 const Settings = () => {
@@ -46,10 +45,10 @@ const Settings = () => {
     const response = documentRef.filter(
       (doc) => doc.email === userConvert.email
     );
-    setIdDoc(response[0].idDoc);
-    setFirstnameForm(response[0].firstname);
-    setLastnameForm(response[0].lastname);
-    setEmailForm(response[0].email);
+    setIdDoc(response[0]?.idDoc);
+    setFirstnameForm(response[0]?.firstname);
+    setLastnameForm(response[0]?.lastname);
+    setEmailForm(response[0]?.email);
   };
 
   const onSubmit = async () => {
@@ -62,7 +61,6 @@ const Settings = () => {
         lastname: doc.data().lastname,
         uid: doc.data().uid,
       }));
-      console.log("usersDatabase", usersDatabase);
       const findEmail = usersDatabase.filter(
         (user) => user.email === emailForm
       );
@@ -73,17 +71,17 @@ const Settings = () => {
         setFirstnameError(NAME_REGEX.test(firstnameForm));
         setLastnameError(NAME_REGEX.test(lastnameForm));
         setEmailError(EMAIL_REGEX.test(emailForm));
-      }
-      if (firstnameError && lastnameError && emailError && !emailExistence) {
-        try {
-          const docRef = doc(database, "users", idDoc);
-          updateDoc(docRef, {
-            firstname: firstnameForm,
-            lastname: lastnameForm,
-            email: emailForm,
-          });
-        } catch (error) {
-          console.log(error);
+        if (firstnameError && lastnameError && emailError && !emailExistence) {
+          try {
+            const docRef = doc(database, "users", idDoc);
+            updateDoc(docRef, {
+              firstname: firstnameForm,
+              lastname: lastnameForm,
+              email: emailForm,
+            });
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
     } catch (error) {
@@ -92,22 +90,10 @@ const Settings = () => {
   };
 
   return (
-    <View>
-      <Text>Settings</Text>
-      <Text>Avatar</Text>
+    <View style={styles.body}>
+      <Text style={styles.title}>Settings</Text>
       <View>
-        <Image
-          style={styles.image}
-          source={{
-            uri: "https://static.diariofemenino.com/uploads/belleza/82981-CARA.jpg",
-          }}
-        />
-        <TouchableOpacity>
-          <Text>Edit Avatar</Text>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <View>
+        <View style={styles.boxInput}>
           <Text style={styles.inputsLabel}>First name</Text>
           <TextInput
             style={styles.inputs}
@@ -119,7 +105,7 @@ const Settings = () => {
             <Text style={styles.msgError}>* invalid first name</Text>
           )}
         </View>
-        <View>
+        <View style={styles.boxInput}>
           <Text style={styles.inputsLabel}>Last Name</Text>
           <TextInput
             style={styles.inputs}
@@ -131,7 +117,7 @@ const Settings = () => {
             <Text style={styles.msgError}>* invalid last name</Text>
           )}
         </View>
-        <View>
+        <View style={styles.boxInput}>
           <Text style={styles.inputsLabel}>Email</Text>
           <TextInput
             style={[styles.inputs, emailExistence && styles.errorInput]}
@@ -146,21 +132,23 @@ const Settings = () => {
             <Text style={styles.msgError}>* invalid email</Text>
           )}
         </View>
-        <View>
-          <Text>Wallet</Text>
+        <Text style={styles.inputsLabel}>Wallet : </Text>
+        <View style={styles.boxPassword}>
           <TouchableOpacity>
-            <Text>Connect</Text>
+            <Text style={styles.inputs}>Connect</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.buttonSend} onPress={onSubmit}>
           <Text style={styles.textSendButton}>Save Changes</Text>
         </TouchableOpacity>
       </View>
-      <View>
-        <Text>Password</Text>
-        <Text>Set a unique password to protect your personal account.</Text>
-        <TouchableOpacity>
-          <Text>Change Password</Text>
+      <View style={styles.footer}>
+        <Text style={styles.textFooter}>Password</Text>
+        <Text style={styles.textSecondaryFooter}>
+          Set a unique password to protect your personal account.
+        </Text>
+        <TouchableOpacity style={[styles.buttonSend, styles.changePassword]}>
+          <Text style={styles.textSendButton}>Change Password</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -168,9 +156,48 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    color: "red",
-    marginTop: 35,
+  body: {
+    backgroundColor: "#130040",
+    flex: 1,
+    paddingHorizontal: "10%",
+  },
+  title: {
+    fontFamily: "Roboto",
+    fontSize: 40,
+    color: "#fff",
+    marginTop: 20,
+    textAlign: "center",
+  },
+  boxInput: {
+    display: "flex",
+    flexDirection: "column",
+    marginVertical: 3,
+  },
+  footer: {
+    marginTop: "5%",
+    borderTopColor: "#6053DD",
+    borderBottomColor: "transparent",
+    borderRightColor: "transparent",
+    borderLeftColor: "transparent",
+    borderWidth: 2,
+    paddingTop: 3,
+  },
+  textFooter: {
+    marginTop: 17,
+    color: "#fff",
+    fontFamily: "Roboto",
+    fontSize: 24,
+    marginBottom: 3,
+  },
+  textSecondaryFooter: {
+    marginTop: 4,
+    color: "#9c9c9c",
+    fontFamily: "Roboto",
+    fontSize: 18,
+    marginBottom: 3,
+  },
+  changePassword: {
+    marginVertical: 3,
   },
   errorInput: {
     borderColor: "red",
@@ -213,6 +240,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontFamily: "Roboto",
     fontSize: 30,
+    marginBottom: 3,
   },
   inputs: {
     backgroundColor: "#6053DD",
@@ -226,27 +254,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     paddingVertical: 12,
   },
-  icon: {
-    borderTopEndRadius: 5,
-    borderBottomEndRadius: 5,
-    textAlign: "center",
-    width: 80,
-    backgroundColor: "#CAF99B",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  iconPassword: {
-    color: "#FFF",
-  },
-  iconPasswordText: {
-    fontFamily: "Roboto",
-    fontSize: 23,
-    color: "#130040",
-    letterSpacing: 1.3,
-    fontWeight: "500",
-  },
   buttonSend: {
     textAlign: "center",
     backgroundColor: "#CAF99B",
@@ -254,22 +261,18 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignContent: "center",
-    paddingTop: 7,
     width: "100%",
-    height: 50,
+    height: 40,
     marginHorizontal: "auto",
+    fontFamily: "Roboto",
   },
   textSendButton: {
+    height: "100%",
     letterSpacing: 2,
     fontWeight: "500",
     fontSize: 16,
     color: "black",
-    paddingVertical: "auto",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    marginVertical: 5,
   },
 });
 
