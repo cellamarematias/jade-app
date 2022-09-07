@@ -7,33 +7,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { NavigationContainer } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-
-let filteredCoins = [];
+import { contains } from "@firebase/util";
 
 const MyCoins = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(true);
-	const initialState = [];
   const [ favs, setFavs ] = useState([]);
-  const [ favCoins, setFavCoins ] = useState([]);
-	const [ coins, setCoins ] = useState([]);
 	const [ search, setSearch ] = useState('');
 	const [ refreshing, setRefreshing ] = useState(false)
 	let uid = '';
 
+	const callback = () => {
+		console.log('callback from child');
+		readFavs();
+	}
+
 	const resetState = () => {
     setFavs([]);
-		setFavCoins([]);
-  };
-
-  useEffect(() => {
-    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
-      .then((response) => response.json())
-      .then((data) => {
-        setCoins(data);
-        setIsLoading(false);
-      })
-			.then((response) => readFavs())
-  }, []);
+	};
 
 	const readFavs = async () => {
 		uid = await AsyncStorage.getItem('uid');
@@ -43,43 +33,17 @@ const MyCoins = ({ navigation }) => {
 		querySnapshot.forEach((doc) => {
 			setFavs(favs => [...favs, doc.data().coin]);
 	})
-
-	setTimeout(function(){
-		filter();
-		setFavCoins(filteredCoins);
-	}, 2000);
-
-	}
-
-	const filter = () => {
-		console.log('dentro de filter', coins.length);
-		filteredCoins = [];
-		coins.filter((coin) =>{
-			for (let i = 0; i < favs.length; i++) {
-				if(favs[i].name === coin.name)
-				{
-					filteredCoins.push(coin)
-				}
-			}
-		} )
-		setFavCoins(filteredCoins);
-		console.log('al final de filter', filteredCoins.length)
 	}
 
 	useFocusEffect(
 		React.useCallback(() => {
 			readFavs();
-			filter();
 		}, [])
 	);
 
 	useEffect(() => {
 		readFavs();
-		filter();
-  }, []);
-
-console.log(filteredCoins.length)
-
+	}, []);
 
 const changeTab = () => {
 	navigation.navigate('Market', { screen: 'Market' });
@@ -105,15 +69,14 @@ const changeTab = () => {
 			</View>
 			<FlatList
 				refreshing={refreshing}
-				onRefresh={ async () => {
+				onRefresh={ () => {
 					setRefreshing(true);
-					await filter();
 					setRefreshing(false);
 				}}
 				style={styles.list}
-				data={filteredCoins}
+				data={favs}
         renderItem={({item}) => {
-					return <MyCoinsItem coin={item}/>
+					return <MyCoinsItem coin={item} callback={callback}/>
 				}}
 				showsVerticalScrollIndicator={false}
 				/>
@@ -142,7 +105,7 @@ const styles = StyleSheet.create({
 		fontSize: 20
 	},
   container: {
-    backgroundColor: '#141414',
+    backgroundColor: 'rgb(19, 0, 64)',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

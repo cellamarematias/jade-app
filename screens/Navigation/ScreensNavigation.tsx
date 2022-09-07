@@ -9,6 +9,7 @@ function ScreensNavigation() {
   const checkUser = async () => {
     try {
       const value = await AsyncStorage.getItem("token");
+      console.log(value)
       const resp = JSON.parse(value);
       setAuth(resp);
       //console.log(resp);
