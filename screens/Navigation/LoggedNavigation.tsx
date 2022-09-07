@@ -12,7 +12,7 @@ const Tab: any = createBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Conversor"
+      initialRouteName="Home"
       tabBarOptions={{
         activeTintColor: "#CAF99B",
         activeBackgroundColor: "#32089A",
