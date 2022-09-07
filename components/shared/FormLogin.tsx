@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { emailAndPasswordLogin } from "../../src/firebase/Firebase";
 
@@ -12,47 +13,67 @@ export const FormLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [viewPassowrd, setViewPassowrd] = useState<boolean>(true);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.inputsLabel}>Email</Text>
-        <TextInput
-          style={styles.inputs}
-          onChangeText={(text) => setEmail(text)}
-          placeholder="Email"
-        ></TextInput>
-      </View>
-      <View>
-        <Text style={styles.inputsLabel}>Password</Text>
-        <View style={styles.boxPassword}>
+    <>
+      {isFetching ? (
+        <ActivityIndicator
+          style={styles.loader}
+          animating={true}
+          size="large"
+          color="#CAF99B"
+        />
+      ) : null}
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.inputsLabel}>Email</Text>
           <TextInput
             style={styles.inputs}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={viewPassowrd}
-            placeholder="Password"
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
           ></TextInput>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => setViewPassowrd(!viewPassowrd)}
-          >
-            <Text style={styles.iconPasswordText}>
-              {viewPassowrd ? "Show" : "Hide"}
-            </Text>
-          </TouchableOpacity>
         </View>
+        <View>
+          <Text style={styles.inputsLabel}>Password</Text>
+          <View style={styles.boxPassword}>
+            <TextInput
+              style={styles.inputs}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={viewPassowrd}
+              placeholder="Password"
+            ></TextInput>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => setViewPassowrd(!viewPassowrd)}
+            >
+              <Text style={styles.iconPasswordText}>
+                {viewPassowrd ? "Show" : "Hide"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={() => emailAndPasswordLogin(email, password, setIsFetching)}
+          style={styles.buttonSend}
+        >
+          <Text style={styles.textSendButton}>LOGIN</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() => emailAndPasswordLogin(email, password)}
-        style={styles.buttonSend}
-      >
-        <Text style={styles.textSendButton}>LOGIN</Text>
-      </TouchableOpacity>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  loader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%",
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
   boxPassword: {
     borderRadius: 5,
     marginTop: 10,
@@ -67,7 +88,7 @@ const styles = StyleSheet.create({
     width: "85%",
     backgroundColor: "#130040",
     marginHorizontal: "auto",
-    height: 'auto'
+    height: "auto",
   },
   inputsBox: {
     marginTop: 5,

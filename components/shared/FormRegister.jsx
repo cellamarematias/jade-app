@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import {
   NAME_REGEX,
@@ -21,6 +22,7 @@ import "firebase/compat/auth";
 export const FormRegister = () => {
   const [viewPassowrd, setViewPassowrd] = useState(false);
   const [isEmailAvailable, setIsEmailAvailable] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
   const {
     control,
     handleSubmit,
@@ -35,6 +37,7 @@ export const FormRegister = () => {
   });
 
   const onSubmit = (data) => {
+    setIsFetching(true);
     createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (resp) => {
         const userLogged = {
@@ -47,157 +50,178 @@ export const FormRegister = () => {
         const userToJSON = JSON.stringify(userLogged);
         AsyncStorage.setItem("user", userToJSON);
         await addDoc(collection(database, "users"), userLogged);
+        setIsFetching(false);
       })
       .catch((err) => {
         AsyncStorage.setItem("user", "");
+        setIsFetching(false);
       });
   };
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.inputsLabel}>Name</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: "Name is required *",
-            },
-            pattern: {
-              value: NAME_REGEX,
-              message: "Name must have only letters*",
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={[styles.inputs, errors.name && styles.errorInput]}
-              onChangeText={onChange}
-              value={value}
-              placeholder="Name"
-            />
-          )}
-          name="name"
+    <>
+      {isFetching ? (
+        <ActivityIndicator
+          style={styles.loader}
+          animating={true}
+          size="large"
+          color="#CAF99B"
         />
-        <Text style={styles.msgError}>
-          {errors.name && errors.name.message}
-        </Text>
-      </View>
-      <View>
-        <Text style={styles.inputsLabel}>Lastname</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: "Lastname is required *",
-            },
-            pattern: {
-              value: NAME_REGEX,
-              message: "Last name must have only letters *",
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={[styles.inputs, errors.lastname && styles.errorInput]}
-              onChangeText={onChange}
-              value={value}
-              placeholder="Last name"
-            />
-          )}
-          name="lastname"
-        />
-        <Text style={styles.msgError}>
-          {errors.lastname && errors.lastname.message}
-        </Text>
-      </View>
-      <View>
-        <Text style={styles.inputsLabel}>Email</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: {
-              value: true,
-              message: "Email is required *",
-            },
-            pattern: {
-              value: EMAIL_REGEX,
-              message: "Please enter a valid email *",
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={[styles.inputs, errors.email && styles.errorInput]}
-              onChangeText={onChange}
-              value={value}
-              placeholder="Email"
-            />
-          )}
-          name="email"
-        />
-        <Text style={styles.msgError}>
-          {errors.email && errors.email.message}
-        </Text>
-        <Text style={styles.msgError}>
-          {isEmailAvailable ? "" : "Email already in use"}
-        </Text>
-      </View>
-      <View>
-        <Text style={styles.inputsLabel}>Password</Text>
-        <View style={styles.boxPassword}>
+      ) : null}
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.inputsLabel}>Name</Text>
           <Controller
             control={control}
             rules={{
               required: {
                 value: true,
-                message: "Password is required *",
-              },
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters *",
+                message: "Name is required *",
               },
               pattern: {
-                value: PASSWORD_REGEX,
-                message:
-                  "Password must have at least 1 number and 1 special character *",
+                value: NAME_REGEX,
+                message: "Name must have only letters*",
               },
             }}
             render={({ field: { onChange, value } }) => (
               <TextInput
-                style={[styles.inputs, errors.password && styles.errorInput]}
+                style={[styles.inputs, errors.name && styles.errorInput]}
                 onChangeText={onChange}
                 value={value}
-                secureTextEntry={viewPassowrd}
-                placeholder="Password"
+                placeholder="Name"
               />
             )}
-            name="password"
+            name="name"
           />
+          <Text style={styles.msgError}>
+            {errors.name && errors.name.message}
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.inputsLabel}>Lastname</Text>
+          <Controller
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: "Lastname is required *",
+              },
+              pattern: {
+                value: NAME_REGEX,
+                message: "Last name must have only letters *",
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={[styles.inputs, errors.lastname && styles.errorInput]}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Last name"
+              />
+            )}
+            name="lastname"
+          />
+          <Text style={styles.msgError}>
+            {errors.lastname && errors.lastname.message}
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.inputsLabel}>Email</Text>
+          <Controller
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: "Email is required *",
+              },
+              pattern: {
+                value: EMAIL_REGEX,
+                message: "Please enter a valid email *",
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={[styles.inputs, errors.email && styles.errorInput]}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Email"
+              />
+            )}
+            name="email"
+          />
+          <Text style={styles.msgError}>
+            {errors.email && errors.email.message}
+          </Text>
+          <Text style={styles.msgError}>
+            {isEmailAvailable ? "" : "Email already in use"}
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.inputsLabel}>Password</Text>
+          <View style={styles.boxPassword}>
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Password is required *",
+                },
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters *",
+                },
+                pattern: {
+                  value: PASSWORD_REGEX,
+                  message:
+                    "Password must have at least 1 number and 1 special character *",
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  style={[styles.inputs, errors.password && styles.errorInput]}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry={viewPassowrd}
+                  placeholder="Password"
+                />
+              )}
+              name="password"
+            />
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => setViewPassowrd(!viewPassowrd)}
+            >
+              <Text style={styles.iconPasswordText}>
+                {viewPassowrd ? "Show" : "Hide"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.msgErrorPassword}>
+            {errors.password && errors.password.message}
+          </Text>
+        </View>
+        <View style={styles.button}>
           <TouchableOpacity
-            style={styles.icon}
-            onPress={() => setViewPassowrd(!viewPassowrd)}
+            style={styles.buttonSend}
+            onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.iconPasswordText}>
-              {viewPassowrd ? "Show" : "Hide"}
-            </Text>
+            <Text style={styles.textSendButton}>REGISTER</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.msgErrorPassword}>
-          {errors.password && errors.password.message}
-        </Text>
       </View>
-      <View style={styles.button}>
-        <TouchableOpacity
-          style={styles.buttonSend}
-          onPress={handleSubmit(onSubmit)}
-        >
-          <Text style={styles.textSendButton}>REGISTER</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  loader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%",
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
   button: {
     color: "red",
     marginTop: 35,

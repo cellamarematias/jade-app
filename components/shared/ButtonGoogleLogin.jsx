@@ -1,14 +1,16 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { app, database } from "../../src/firebase/Firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 
 export function ButtonGoogleLogin() {
+  const [isFetching, setIsFetching] = useState(false);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const googleLogin = () => {
+    setIsFetching(true);
     signInWithPopup(auth, provider)
       .then(async (UserCredentials) => {
         const completeNameUser = UserCredentials.user.displayName.split(" ");
@@ -43,17 +45,37 @@ export function ButtonGoogleLogin() {
       .catch((_err) => {
         AsyncStorage.setItem("token", "");
       });
+    setIsFetching(false);
   };
 
   return (
-    <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
-      <Text style={styles.textButtonContinue}>
-        <Text style={styles.GfromGoogle}>G</Text>Continue with Google
-      </Text>
-    </TouchableOpacity>
+    <>
+      {isFetching ? (
+        <ActivityIndicator
+          style={styles.loader}
+          animating={true}
+          size="large"
+          color="#CAF99B"
+        />
+      ) : null}
+      <TouchableOpacity onPress={googleLogin} style={styles.continueGoogle}>
+        <Text style={styles.textButtonContinue}>
+          <Text style={styles.GfromGoogle}>G</Text>Continue with Google
+        </Text>
+      </TouchableOpacity>
+    </>
   );
 }
 const styles = StyleSheet.create({
+  loader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%",
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
   container: {
     flex: 1,
     backgroundColor: "#130040",

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,6 +24,7 @@ const Settings = () => {
   const [emailError, setEmailError] = useState<boolean>(true);
   const [emailExistence, setEmailExistence] = useState<boolean>(false);
   const [emailLocalstorage, setEmailLocalStorage] = useState<string>("");
+  const [isFetching, setIsFetching] = useState(true)
 
   useEffect(() => {
     getUser();
@@ -49,9 +51,11 @@ const Settings = () => {
     setFirstnameForm(response[0]?.firstname);
     setLastnameForm(response[0]?.lastname);
     setEmailForm(response[0]?.email);
+    setIsFetching(false)
   };
 
   const onSubmit = async () => {
+    setIsFetching(true)
     try {
       const querySnapshot = await getDocs(collection(database, "users"));
       const usersDatabase = await querySnapshot.docs.map((doc) => ({
@@ -87,10 +91,19 @@ const Settings = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsFetching(false)
   };
 
   return (
     <ScrollView>
+      {isFetching ? (
+        <ActivityIndicator
+          style={styles.loader}
+          animating={true}
+          size="large"
+          color="#CAF99B"
+        />
+      ) : null}
       <View style={styles.body}>
         <Text style={styles.title}>Settings</Text>
         <View>
@@ -158,6 +171,15 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
+  loader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%",
+    zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
   body: {
     backgroundColor: "#130040",
     flex: 1,

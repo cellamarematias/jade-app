@@ -21,17 +21,23 @@ export const app: any = firebase.initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 // login with email and password
-export function emailAndPasswordLogin(email: string, password: string): any {
+export function emailAndPasswordLogin(
+  email: string,
+  password: string,
+  isFetching: any
+): any {
+  isFetching(true);
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredentials: any) => {
-      console.log(userCredentials);
       const userToJSON: string = JSON.stringify(
         userCredentials._tokenResponse.idToken
       );
       AsyncStorage.setItem("token", userToJSON);
+      isFetching(false);
     })
     .catch((err) => {
       AsyncStorage.setItem("token", "");
+      isFetching(false);
     });
 }
 // create user
