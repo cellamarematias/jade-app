@@ -20,16 +20,12 @@ export function ButtonGoogleLogin() {
           email: UserCredentials.user.email,
           uid: UserCredentials.user.uid,
         };
-        console.log("userLogged", userLogged);
-        // lo guardo en logalstorage
         const userToJSON = JSON.stringify(userLogged);
         AsyncStorage.setItem("user", userToJSON);
-        // traigo los usuarios de firestore
         const querySnapshot = await getDocs(collection(database, "users"));
         const response = await querySnapshot.docs.map((doc) => ({
           ...doc.data(),
         }));
-        // hago checkeos si esta registrado en Firestore o no
         if (!(userLogged.email === undefined)) {
           let isRegistered = false;
           for (let i = 0; i < response.length; i++) {

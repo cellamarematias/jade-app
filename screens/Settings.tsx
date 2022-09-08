@@ -24,7 +24,7 @@ const Settings = () => {
   const [emailError, setEmailError] = useState<boolean>(true);
   const [emailExistence, setEmailExistence] = useState<boolean>(false);
   const [emailLocalstorage, setEmailLocalStorage] = useState<string>("");
-  const [isFetching, setIsFetching] = useState(true)
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     getUser();
@@ -51,11 +51,11 @@ const Settings = () => {
     setFirstnameForm(response[0]?.firstname);
     setLastnameForm(response[0]?.lastname);
     setEmailForm(response[0]?.email);
-    setIsFetching(false)
+    setIsFetching(false);
   };
 
   const onSubmit = async () => {
-    setIsFetching(true)
+    setIsFetching(true);
     try {
       const querySnapshot = await getDocs(collection(database, "users"));
       const usersDatabase = await querySnapshot.docs.map((doc) => ({
@@ -91,7 +91,7 @@ const Settings = () => {
     } catch (error) {
       console.log(error);
     }
-    setIsFetching(false)
+    setIsFetching(false);
   };
 
   return (
@@ -108,9 +108,13 @@ const Settings = () => {
         <Text style={styles.title}>Settings</Text>
         <View>
           <View style={styles.boxInput}>
-            <Text style={styles.inputsLabel}>First name</Text>
+            <Text
+              style={styles.inputsLabel}
+            >
+              First name
+            </Text>
             <TextInput
-              style={styles.inputs}
+              style={[styles.inputs, !firstnameError ? styles.errorInput : null]}
               value={firstnameForm}
               placeholder="first name"
               onChangeText={(text) => setFirstnameForm(text)}
@@ -122,7 +126,7 @@ const Settings = () => {
           <View style={styles.boxInput}>
             <Text style={styles.inputsLabel}>Last Name</Text>
             <TextInput
-              style={styles.inputs}
+              style={[styles.inputs, !lastnameError ? styles.errorInput : null]}
               value={lastnameForm}
               placeholder="last name"
               onChangeText={(text) => setLastnameForm(text)}
@@ -134,7 +138,7 @@ const Settings = () => {
           <View style={styles.boxInput}>
             <Text style={styles.inputsLabel}>Email</Text>
             <TextInput
-              style={[styles.inputs, emailExistence && styles.errorInput]}
+              style={[styles.inputs, emailExistence && styles.errorInput, !emailError ? styles.errorInput : null]}
               value={emailForm}
               placeholder="email"
               onChangeText={(text) => setEmailForm(text)}

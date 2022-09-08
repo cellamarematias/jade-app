@@ -8,9 +8,6 @@ const Login = () => {
   const navigation: any = useNavigation();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.exit}>
-        <Text style={styles.exitText}>X</Text>
-      </TouchableOpacity>
       <View style={styles.boxTittles}>
         <View>
           <Text style={styles.textTittle}>Log In</Text>
