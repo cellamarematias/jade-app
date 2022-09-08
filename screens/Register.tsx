@@ -34,6 +34,9 @@ const Register = () => {
 };
 
 const styles = StyleSheet.create({
+  input: {
+    color: 'white'
+  },
   container: {
     backgroundColor: "#130040",
     flex: 1,

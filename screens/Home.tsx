@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import LogOutButton from "../components/shared/LogOutButton";
+import { View, Text, StyleSheet } from "react-native";
+import Navigation from "./Navigation/LoggedNavigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   return (

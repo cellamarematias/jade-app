@@ -4,10 +4,13 @@ import { FormLogin } from "../components/shared/FormLogin";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 
-const Login: React.FC = () => {
+const Login = () => {
   const navigation: any = useNavigation();
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.exit}>
+        <Text style={styles.exitText}>X</Text>
+      </TouchableOpacity>
       <View style={styles.boxTittles}>
         <View>
           <Text style={styles.textTittle}>Log In</Text>
