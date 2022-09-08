@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar, TouchableOpacity } from "react-native";
-import CoinItem from "../components/CoinItem";
-import MyCoinsItem from "../components/MyCoinsItem";
 import { database } from "../src/firebase/firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
@@ -67,7 +65,7 @@ const changeTab = () => {
 				onChangeText={text => { setSearch(text)}}
 				/>
 			</View>
-			<FlatList
+			{/* <FlatList
 				refreshing={refreshing}
 				onRefresh={ () => {
 					setRefreshing(true);
@@ -79,7 +77,7 @@ const changeTab = () => {
 					return <MyCoinsItem coin={item} callback={callback}/>
 				}}
 				showsVerticalScrollIndicator={false}
-				/>
+				/> */}
 		</View>
 	)
 };

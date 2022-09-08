@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar } from "react-native";
-import CoinItem from "../components/CoinItem";
+// import CoinItem from "../components/CoinItem";
 import { database } from "../src/firebase/firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs } from "firebase/firestore";
@@ -44,7 +44,7 @@ const Market = ({ navigation }) => {
 					>Favourites →
 				</Text>
 			</View>
-			<FlatList
+			{/* <FlatList
 				refreshing={refreshing}
 				onRefresh={ async () => {
 					setRefreshing(true);
@@ -60,7 +60,7 @@ const Market = ({ navigation }) => {
 					return <CoinItem coin={item}/>
 				}}
 				showsVerticalScrollIndicator={false}
-				/>
+				/> */}
 		</View>
 	)
 };
