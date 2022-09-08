@@ -8,20 +8,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const [displayName, setDisplayName] = useState("");
+  const [ coins, setCoins ] = useState([]);
 
-  const getData = async () => {
-    try {
-      const displayName = await AsyncStorage.getItem('displayName');
-      setDisplayName(displayName!)
-      if(displayName !== null) {
-        // value previously stored
-      }
-    } catch(e) {
-      // error reading value
-    }
-  }
 
-  getData();
+	const loadData = async () => {
+		console.log('data');
+		const res: any = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+		const data: any = await res.json();
+		console.log(data);
+		setCoins(data);
+	};
+
+  useEffect(() => {
+		console.log('loaded');
+		loadData();
+	}, []);
 
   return (
     <View style={styles.container}>
