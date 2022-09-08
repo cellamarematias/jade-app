@@ -69,9 +69,6 @@ const Conversor = () => {
             color: "#fff",
           }}
         />
-        {/* <TouchableOpacity onPress={() => changeSelects()}>
-          <Text>Intercambia</Text>
-        </TouchableOpacity> */}
         <Text style={styles.text}>To</Text>
         <SelectList
           data={data}
@@ -79,6 +76,11 @@ const Conversor = () => {
           boxStyles={{ backgroundColor: "#6053DD" }}
           inputStyles={{ fontFamily: "Roboto", fontSize: 20, color: "#fff" }}
           dropdownStyles={{ backgroundColor: "#6053DD" }}
+          dropdownTextStyles={{
+            fontFamily: "Roboto",
+            fontSize: 16,
+            color: "#fff",
+          }}
         />
         <TouchableOpacity style={styles.buttonSend} onPress={checkValues}>
           <Text style={styles.textSendButton}>CONVERT</Text>
