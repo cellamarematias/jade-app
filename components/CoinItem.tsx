@@ -6,7 +6,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-
 const CoinItem = ({coin}) => {
 	// observador de ususario
 	const auth = getAuth();
@@ -33,6 +32,7 @@ const CoinItem = ({coin}) => {
 
 	const save = async (coin: any) => {
 		uid = await AsyncStorage.getItem('uid');
+		console.log('dentro de la funcion save ', uid)
 		try {
 			const docRef = await addDoc(collection(database, "favs"), {
 				uid,
@@ -73,7 +73,7 @@ const CoinItem = ({coin}) => {
 
 const styles = StyleSheet.create({
 	containerItem: {
-		backgroundColor: 'rgb(19, 0, 64)',
+		backgroundColor: '#121212',
 		paddingTop: 10,
 		flexDirection: "row",
 		justifyContent: 'space-between'

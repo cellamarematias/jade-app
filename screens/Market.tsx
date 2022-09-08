@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar } from "react-native";
 import CoinItem from "../components/CoinItem";
 import { database } from "../src/firebase/firebaseConfig";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { collection, getDocs } from "firebase/firestore";
 import { NavigationContainer } from '@react-navigation/native';
 
 
@@ -14,10 +12,13 @@ const Market = ({ navigation }) => {
 	const [ favs, setFavs ] = useState([]);
 
 	const loadData = async () => {
+		console.log('data');
+
 		const res: any = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
 		const data: any = await res.json();
+		console.log(data);
 		setCoins(data);
-	}
+	};
 
 	useEffect(() => {
 		console.log('loaded');
@@ -26,7 +27,7 @@ const Market = ({ navigation }) => {
 
 	const changeTab = () => {
 		navigation.navigate('MyCoins', { screen: 'MyCoins' });
-	}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -53,7 +54,7 @@ const Market = ({ navigation }) => {
 				}}
 				style={styles.list}
 				data={
-					coins.filter((coin) => coin.name.toLowerCase().includes(search) ||
+					coins?.filter((coin) => coin.name.toLowerCase().includes(search) ||
 					coin.symbol.toLowerCase().includes(search))
 				}
         renderItem={({item}) => {

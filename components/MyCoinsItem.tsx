@@ -6,20 +6,27 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { Icon } from '@rneui/themed';
+// import { Icon } from '@rneui/themed';
 
 
 let uid = '';
 let docId = '';
+interface propsInterface  {
+	id: string,
+	price: number,
+	dolar: number,
+	image: string,
+	price_change_percentage_24h: number
+}
 
 const MyCoinsItem = ({coin, callback}) => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [ coinPrice, setCoinPrice ] = useState({
+	const [ coinPrice, setCoinPrice ] = useState<propsInterface>({
 		id: '',
-		price: '',
-		dolar: '',
+		price: 0,
+		dolar: 0,
 		image: '',
-		price_change_percentage_24h: ''
+		price_change_percentage_24h: 0
 	});
 
 
@@ -148,12 +155,14 @@ const MyCoinsItem = ({coin, callback}) => {
 				</View>
 				<View>
 					<TouchableOpacity onPress={() => seeMarket(coin.id)}>
-						<Icon name='monetization-on' color='#00aced' />
+						<Text style={styles.text}>See Market</Text>
+						{/* <Icon name='money' color='#00aced' /> */}
 					</TouchableOpacity>
 				</View>
 				<View>
 						<TouchableOpacity onPress={() => showConfirmDialog(coin.name)}>
-						<Icon style={styles.text} name='delete' color='#00aced' />
+							<Text style={styles.text}>Delete</Text>
+						{/* <Icon style={styles.text} name='delete-forever' color='red' /> */}
 					</TouchableOpacity>
 				</View>
 			</TouchableOpacity></>
