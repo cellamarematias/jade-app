@@ -1,6 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
-import ScreensNavigation from "./screens/Navigation/ScreensNavigation";
-import { StatusBar } from "expo-status-bar";
+import { ScreensNavigation } from "./screens/Navigation/ScreensNavigation";
 
 // Screens here
 import Login from "./screens/Login";

@@ -1,51 +1,13 @@
-import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { app } from "../src/firebase/firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-import { database } from "../src/firebase/firebaseConfig";
+import { FormLogin } from "../components/shared/FormLogin";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 
 const Login = () => {
   const navigation: any = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const auth = getAuth(app);
-
-  const loginUser = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials: any) => {
-        try {
-          const userToJSON: string = JSON.stringify(
-            userCredentials._tokenResponse.idToken
-          );
-          AsyncStorage.setItem("token", userToJSON);
-          alert('Welcome!');
-        } catch (error) {
-          AsyncStorage.setItem("token", "");
-        }
-      })
-      .catch((err) => {
-        alert(err);
-        AsyncStorage.setItem("token", "");
-      });
-  };
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.exit}>
-        <Text style={styles.exitText}>X</Text>
-      </TouchableOpacity>
       <View style={styles.boxTittles}>
         <View>
           <Text style={styles.textTittle}>Log In</Text>
@@ -55,58 +17,31 @@ const Login = () => {
           <Text style={styles.textTittle}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setEmail(text)}
-        placeholder="Email"
-      ></TextInput>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setPassword(text)}
-        placeholder="Password"
-      ></TextInput>
-      <TouchableOpacity onPress={loginUser} style={styles.buttonSend}>
-        <Text style={styles.textSendButton}>LOGIN</Text>
-      </TouchableOpacity>
+      <FormLogin />
       <Text style={styles.forgotPassword}>Forgot your password ?</Text>
-      <Text style={styles.optionalLoginText}>OR</Text>
-      <TouchableOpacity style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>Continue with Google</Text>
+      <ButtonGoogleLogin />
+      <TouchableOpacity style={styles.boxRegister} onPress={() => navigation.navigate("Register")}>
+        <Text style={styles.textCreateAccount}>Don't have an account?</Text>
+        <View style={styles.boxCreateAccount}>
+          <Text style={styles.createAccount}>Create Account</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  input: {
-    color: 'white'
-  },
-  container: {
+  boxRegister: {
     backgroundColor: "#130040",
   },
-  exit: {
-    width: "auto",
-    display: "flex",
-    flexDirection: "row-reverse",
-    marginVertical: 5,
+  container: {
+    flex: 1,
+    backgroundColor: "#130040",
   },
-  exitText: {
-    fontFamily: "Roboto",
-    fontSize: 25,
-    paddingTop: 3,
-    paddingRight: 10,
-    color: "#CAF99B",
-  },
-  buttonSend: {
-    textAlign: "center",
-    backgroundColor: "#CAF99B",
-    borderRadius: 5,
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    paddingVertical: 7,
-    width: "80%",
-    marginHorizontal: "auto",
+  GfromGoogle: {
+    fontSize: 50,
+    fontWeight: "900",
+    paddingRight: 8,
   },
   textSendButton: {
     letterSpacing: 2,
@@ -116,11 +51,12 @@ const styles = StyleSheet.create({
     paddingVertical: "auto",
   },
   forgotPassword: {
-    width: "80%",
+    width: "85%",
     marginHorizontal: "auto",
     textAlign: "right",
-    marginVertical: 10,
     color: "#fff",
+    fontSize: 16,
+    marginVertical: 15,
   },
   optionalLoginText: {
     letterSpacing: 4,
@@ -129,13 +65,15 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 30,
     textAlign: "center",
+    fontWeight: "200",
   },
   continueGoogle: {
-    width: "80%",
+    width: "85%",
     paddingVertical: 10,
     marginHorizontal: "auto",
     backgroundColor: "transparent",
-    border: 2,
+    border: 20,
+    borderColor: "#fff",
     borderRadius: 5,
     textAlign: "center",
   },
@@ -148,9 +86,35 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 25,
   },
+  textCreateAccount: {
+    marginTop: "10%",
+    color: "#FFF",
+    fontFamily: "Roboto",
+    fontSize: 25,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  createAccount: {
+    paddingTop: 10,
+    color: "#FFF",
+    fontFamily: "Roboto",
+    fontSize: 25,
+    fontWeight: "500",
+    textAlign: "center",
+    borderBottomColor: "#CAF99B",
+    borderTopColor: "transparent",
+    borderRightColor: "transparent",
+    borderLeftColor: "transparent",
+    borderWidth: 3,
+  },
+  boxCreateAccount: {
+    paddingVertical: 20,
+    marginHorizontal: "auto",
+  },
   boxTittles: {
+    marginTop: 18,
     backgroundColor: "#130040",
-    paddingVertical: 30,
+    paddingVertical: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
@@ -158,6 +122,7 @@ const styles = StyleSheet.create({
   textTittle: {
     fontFamily: "Roboto",
     fontSize: 40,
+    color: "#fff",
   },
   borderTittle: {
     fontFamily: "Roboto",

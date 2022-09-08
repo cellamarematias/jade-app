@@ -2,142 +2,76 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  Button,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
-import { app } from "../src/firebase/firebaseConfig";
+import { FormRegister } from "../components/shared/FormRegister";
+import { ButtonGoogleLogin } from "../components/shared/ButtonGoogleLogin";
 
 const Register = () => {
   const navigation: any = useNavigation();
-  const auth = getAuth(app);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  // funcion crear usuario
-  const createUser = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials: any) => {
-        try {
-          const userToJSON: string = JSON.stringify(
-            userCredentials._tokenResponse.idToken
-          );
-          AsyncStorage.setItem("token", userToJSON);
-
-          alert('User registered');
-        } catch (error) {
-          AsyncStorage.setItem("token", "");
-        }
-      })
-      .catch((err) => {
-        AsyncStorage.setItem("token", "");
-        alert(err);
-      });
-  };
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.exit}>
-        <Text style={styles.exitText}>X</Text>
-      </TouchableOpacity>
-      <View style={styles.boxTittles}>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.textTittle}>Log In</Text>
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.textTittle}>Sign Up</Text>
-          <View style={styles.borderBot}></View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.boxTittles}>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.textTittle}>Log In</Text>
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.textTittle}>Sign Up</Text>
+            <View style={styles.borderBot}></View>
+          </View>
         </View>
+        <FormRegister />
+        <ButtonGoogleLogin />
+        <Text style={styles.conditions}>
+          By proceeding, you agree with Terms of Use & Privacy Policy.
+        </Text>
       </View>
-      <Text>Email</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setEmail(text)}
-        placeholder="example@example.com"
-      />
-      <Text>Password</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry={true}
-      />
-      <TouchableOpacity onPress={createUser} style={styles.buttonSend}>
-        <Text style={styles.textSendButton}>REGISTER</Text>
-      </TouchableOpacity>
-      {/* <Text style={styles.optionalLoginText}>OR</Text>
-      <TouchableOpacity style={styles.continueGoogle}>
-        <Text style={styles.textButtonContinue}>Sign In with Google</Text>
-      </TouchableOpacity> */}
-    </View>
+    </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   input: {
     color: 'white'
   },
   container: {
     backgroundColor: "#130040",
+    flex: 1,
   },
-  exit: {
-    width: "auto",
-    display: "flex",
-    flexDirection: "row-reverse",
-    marginVertical: 5,
-  },
-  exitText: {
+  conditions: {
+    width: "85%",
+    marginTop: 15,
+    marginBottom: 15,
+    color: "#FFF",
     fontFamily: "Roboto",
-    fontSize: 25,
-    paddingTop: 3,
-    paddingRight: 10,
-    color: "#CAF99B",
-  },
-  buttonSend: {
+    fontSize: 16,
+    fontWeight: "500",
     textAlign: "center",
-    backgroundColor: "#CAF99B",
-    borderRadius: 5,
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    paddingVertical: 7,
-    width: "80%",
     marginHorizontal: "auto",
   },
-  textSendButton: {
-    letterSpacing: 2,
-    fontWeight: "500",
-    fontSize: 16,
-    color: "black",
-    paddingVertical: "auto",
+  GfromGoogle: {
+    fontSize: 50,
+    fontWeight: "900",
+    paddingRight: 8,
+  },
+  continueGoogle: {
+    width: "85%",
+    paddingVertical: 1,
+    marginHorizontal: "auto",
+    backgroundColor: "transparent",
+    border: 20,
+    borderColor: "#fff",
+    borderRadius: 5,
+    textAlign: "center",
   },
   forgotPassword: {
     width: "80%",
     marginHorizontal: "auto",
     textAlign: "right",
-    marginVertical: 10,
     color: "#fff",
-  },
-  optionalLoginText: {
-    letterSpacing: 4,
-    color: "#fff",
-    marginVertical: 15,
-    fontFamily: "Roboto",
-    fontSize: 30,
-    textAlign: "center",
-  },
-  continueGoogle: {
-    width: "80%",
-    paddingVertical: 10,
-    marginHorizontal: "auto",
-    backgroundColor: "transparent",
-    border: 2,
-    borderRadius: 5,
-    textAlign: "center",
   },
   textButtonContinue: {
     color: "#FFF",
@@ -149,15 +83,40 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   boxTittles: {
+    marginTop: 18,
     backgroundColor: "#130040",
-    paddingVertical: 30,
+    paddingVertical: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
   },
+  inputsBox: {
+    marginTop: 5,
+    width: "85%",
+    marginHorizontal: "auto",
+  },
+  icon: {
+    borderTopEndRadius: 5,
+    borderBottomEndRadius: 5,
+    textAlign: "center",
+    width: 80,
+    backgroundColor: "#CAF99B",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  iconPasswordText: {
+    fontFamily: "Roboto",
+    fontSize: 23,
+    color: "#130040",
+    letterSpacing: 1.3,
+    fontWeight: "500",
+  },
   textTittle: {
     fontFamily: "Roboto",
     fontSize: 40,
+    color: "#fff",
   },
   borderTittle: {
     fontFamily: "Roboto",
