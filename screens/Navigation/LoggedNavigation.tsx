@@ -19,17 +19,12 @@ function MyTabs() {
     <Tab.Navigator
       initialRouteName="Blog"
       screenOptions={{
-        activeTintColor: "#CAF99B",
-        activeBackgroundColor: "#141414",
-        inactiveTintColor: "#fff",
-        inactiveBackgroundColor: "#141414",
-        tabBarActiveTintColor: "#CAF99B",
-        backgroundColor: 'red',
+        tabBarInactiveTintColor: '#6053DD',
+        tabBarActiveTintColor: '#CAF99B',
         tabBarStyle: {
           backgroundColor: '#32089A',
           padding: 4
         }
-
       }}
     >
       {/* <Tab.Screen
@@ -38,8 +33,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "Home",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <AntDesign name="home" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign name="home" size={24} color={focused ? "red" : "#6053DD"} />
           )
         }}
       /> */}
@@ -47,10 +42,12 @@ function MyTabs() {
         name="Blog"
         component={Blog}
         options={{
+          activeTintColor: 'red',
+          inactiveTintColor: "grey",
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <FontAwesome name="newspaper-o" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <FontAwesome name="newspaper-o" size={24} color={focused ? "#CAF99B" : "#6053DD"}/>
           )
         }}
       />
@@ -60,8 +57,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <FontAwesome name="calculator" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <FontAwesome name="calculator" size={24} color={focused ? "#CAF99B" : "#6053DD"} />
           )
         }}
       />
@@ -71,8 +68,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <FontAwesome5 name="coins" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <FontAwesome5 name="coins" size={24} color={focused ? "#CAF99B" : "#6053DD"} />
           )
         }}
       />
@@ -82,8 +79,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <AntDesign name="hearto" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign name="hearto" size={24} color={focused ? "#CAF99B" : "#6053DD"} />
           )
         }}
       />
@@ -94,8 +91,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <Ionicons name="settings-outline" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons name="settings-outline" size={24} color={focused ? "#CAF99B" : "#6053DD"} />
           )
         }}
       />
@@ -105,8 +102,8 @@ function MyTabs() {
         options={{
           tabBarLabel: "",
           headerShown: false,
-          tabBarIcon: ({ tintColor }) => (
-            <AntDesign name="logout" size={24} color="white" />
+          tabBarIcon: ({ focused, color }) => (
+            <AntDesign name="logout" size={24} color={focused ? "#CAF99B" : "#6053DD"} />
           )
         }}
       />

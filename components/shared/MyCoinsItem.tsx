@@ -186,13 +186,13 @@ const MyCoinsItem = ({coin, callback}) => {
 				</View>
 				<View>
 					<TouchableOpacity onPress={() => seeMarket(coin.id)}>
-						<Text style={styles.text}>{<Ionicons name="pricetag-outline" size={24} color="white" />}</Text>
+						<Text style={styles.text}>{<Ionicons name="pricetag-outline" size={20} color="#CAF99B" />}</Text>
 						{/* <Icon name='monetization-on' color='#00aced' /> */}
 					</TouchableOpacity>
 				</View>
 				<View>
 						<TouchableOpacity onPress={() => setModalDelete(true)}>
-						<Text style={styles.text}>{<AntDesign name="delete" size={24} color="white" />}</Text>
+						<Text style={styles.text}>{<AntDesign name="delete" size={20} color="tomato" />}</Text>
 					</TouchableOpacity>
 				</View>
 			</TouchableOpacity></>
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
 	},
 	containerItem: {
 		backgroundColor: 'rgb(19, 0, 64)',
-		paddingTop: 10,
+		paddingTop: 15,
 		flexDirection: "row",
 		justifyContent: 'space-between'
 
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
-		width: '45%',
+		width: '70%',
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

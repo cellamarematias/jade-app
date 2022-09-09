@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar } from "react-native";
 import CoinItem from "../components/shared/CoinItem";
 import { database } from "../src/firebase/firebaseConfig";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs } from "firebase/firestore";
 import { NavigationContainer } from '@react-navigation/native';
 
