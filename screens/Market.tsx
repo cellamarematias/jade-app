@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar } from "react-native";
-// import CoinItem from "../components/CoinItem";
+import CoinItem from "../components/shared/CoinItem";
 import { database } from "../src/firebase/firebaseConfig";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs } from "firebase/firestore";
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -24,9 +23,9 @@ const Market = ({ navigation }) => {
 		loadData();
 	}, []);
 
-	const changeTab = () => {
-		navigation.navigate('MyCoins', { screen: 'MyCoins' });
-	}
+	// const changeTab = () => {
+	// 	navigation.navigate('MyCoins', { screen: 'MyCoins' });
+	// }
 
 	return (
 		<View style={styles.container}>
@@ -38,13 +37,13 @@ const Market = ({ navigation }) => {
 				placeholderTextColor='#858585'
 				onChangeText={text => { setSearch(text)}}
 				/>
-				<Text
+				{/* <Text
 					style={styles.tittle}
 					onPress={changeTab}
 					>Favourites →
-				</Text>
+				</Text> */}
 			</View>
-			{/* <FlatList
+			<FlatList
 				refreshing={refreshing}
 				onRefresh={ async () => {
 					setRefreshing(true);
@@ -60,7 +59,7 @@ const Market = ({ navigation }) => {
 					return <CoinItem coin={item}/>
 				}}
 				showsVerticalScrollIndicator={false}
-				/> */}
+				/>
 		</View>
 	)
 };

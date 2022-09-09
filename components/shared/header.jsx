@@ -1,27 +1,106 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from "react-native";
 
-const Header = (props) => (
-  <View key={props.id} style={styles.container}>
+const Header = (props) => {
+	const [ bitcoin, setBitcoin ] = useState({
+		id: '',
+		price: '',
+		dolar: '',
+		image: '',
+		price_change_percentage_24h: 0
+	});
+
+	const [ ethereum, setEthereum ] = useState({
+		id: '',
+		price: '',
+		dolar: '',
+		image: '',
+		price_change_percentage_24h: 0
+	});
+
+	const [ tether, setTether ] = useState({
+		id: '',
+		price: '',
+		dolar: '',
+		image: '',
+		price_change_percentage_24h: 0
+	});
+
+	const bitcoinSet = async () => {
+		const res = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin`)
+		const data= await res.json();
+		await setBitcoin({
+			id: data.name,
+			price: data.market_data.current_price.ars,
+			dolar: data.market_data.current_price.usd,
+			image: data.image.small,
+			price_change_percentage_24h: data.price_change_percentage_24h
+		});
+	}
+
+	const ethereumSet = async () => {
+		const res = await fetch(`https://api.coingecko.com/api/v3/coins/ethereum`)
+		const data= await res.json();
+		await setEthereum({
+			id: data.name,
+			price: data.market_data.current_price.ars,
+			dolar: data.market_data.current_price.usd,
+			image: data.image.small,
+			price_change_percentage_24h: data.price_change_percentage_24h
+		});
+	}
+
+	const tetherSet = async () => {
+		const res = await fetch(`https://api.coingecko.com/api/v3/coins/tether`)
+		const data= await res.json();
+		await setTether({
+			id: data.name,
+			price: data.market_data.current_price.ars,
+			dolar: data.market_data.current_price.usd,
+			image: data.image.small,
+			price_change_percentage_24h: data.price_change_percentage_24h
+		});
+	}
+
+	useEffect(() => {
+		bitcoinSet();
+		ethereumSet();
+		tetherSet();
+	}, []);
+
+
+	return (
+		<View key={props.id} style={styles.container}>
 		<View style={styles.row}>
-			<Text style={styles.coin}>BTC:</Text>
-			<Text style={styles.value}>21385</Text>
+			<Image
+						style={styles.image}
+						source={{uri:bitcoin.image}}
+			/>
+			<Text style={styles.value}> ${bitcoin.dolar}</Text>
 		</View>
 		<View style={styles.row}>
-			<Text style={styles.coin}>BTC:</Text>
-			<Text style={styles.value}>2594</Text>
+		<Image
+					style={styles.image}
+					source={{uri:ethereum.image}}
+		/>
+		<Text style={styles.value}> ${ethereum.dolar}</Text>
 		</View>
 		<View style={styles.row}>
-			<Text style={styles.coin}>BTC:</Text>
-			<Text style={styles.value}>3648</Text>
+			<Image
+						style={styles.image}
+						source={{uri:tether.image}}
+			/>
+			<Text style={styles.value}> ${tether.dolar}</Text>
 		</View>
   </View>
-)
+	)
+
+}
 
 const styles = StyleSheet.create({
   container: {
 		position: 'absolute',
-		top: 0,
+		top: 15,
 		left: 0,
 		right: 0,
 		flexDirection: "row",
@@ -49,12 +128,12 @@ const styles = StyleSheet.create({
 	},
 	value: {
 		color: '#ABFB5C',
-		fontSize: 17,
+		fontSize: 15,
 		marginRight: 7
 	},
   image: {
-    width: 58,
-    height: 48,
+    width: 25,
+    height: 25,
     borderRadius: 4
   },
 	tinyLogo: {

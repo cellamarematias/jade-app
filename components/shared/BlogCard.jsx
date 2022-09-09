@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Linking } from "react-native";
 
 
 const BlogCard = (props) => (
@@ -11,7 +11,7 @@ const BlogCard = (props) => (
       />
 		</View>
 		<View style={styles.center}>
-			<Text numberOfLines={3} style={styles.heading}>{props.text}</Text>
+			<Text numberOfLines={3} style={styles.heading} onPress={() => Linking.openURL(props.urlLink)}>{props.text}</Text>
 		</View>
   </View>
 )
