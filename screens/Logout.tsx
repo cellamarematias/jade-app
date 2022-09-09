@@ -5,7 +5,7 @@ import { getAuth, signOut } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function Logout() {
+const Logout = () => {
   const logOut = () => {
     const auth = getAuth();
     signOut(auth).then(() => {
@@ -34,3 +34,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default Logout;

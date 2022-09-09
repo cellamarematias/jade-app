@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput, StatusBar, TouchableOpacity } from "react-native";
+import MyCoinsItem from "../components/shared/MyCoinsItem";
 import { database } from "../src/firebase/firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
@@ -43,20 +44,10 @@ const MyCoins = ({ navigation }) => {
 		readFavs();
 	}, []);
 
-const changeTab = () => {
-	navigation.navigate('Market', { screen: 'Market' });
-}
 
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor="#141414"/>
-			<View style={styles.header}>
-				<Text style={styles.tittle}>Favourites</Text>
-				<Text
-				style={styles.tittle}
-				onPress={changeTab}
-				>See all →</Text>
-			</View>
 			<View style={styles.header}>
 				<TextInput style={styles.input}
 				autoCapitalize = {"none"}
@@ -65,7 +56,7 @@ const changeTab = () => {
 				onChangeText={text => { setSearch(text)}}
 				/>
 			</View>
-			{/* <FlatList
+			<FlatList
 				refreshing={refreshing}
 				onRefresh={ () => {
 					setRefreshing(true);
@@ -77,7 +68,7 @@ const changeTab = () => {
 					return <MyCoinsItem coin={item} callback={callback}/>
 				}}
 				showsVerticalScrollIndicator={false}
-				/> */}
+				/>
 		</View>
 	)
 };

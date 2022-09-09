@@ -1,4 +1,4 @@
-import {Text, View, StyleSheet } from 'react-native';
+import {Text, View, StyleSheet, Linking } from 'react-native';
 import BlogCard from '../components/shared/BlogCard';
 import Header from '../components/shared/header';
 
@@ -11,10 +11,10 @@ export default function Blog() {
 			</View>
 			<Text style={styles.subheading}>Conocé el mundo Crypto!</Text>
       <BlogCard text={'¿Cómo pueden la blockchain y los NFT descentralizar tu identidad digital en la Web3?'}
-			url={'../../assets/images/blog1.jpg'}></BlogCard>
-			<BlogCard text={'Tres maneras para lograr vender tu Bitcoin por dinero en efectivo: Una guía rápida de Binance'} url={''}></BlogCard>
-      <BlogCard text={'Hablamos de Criptomonedas con Expertos'}></BlogCard>
-			<BlogCard text={'Guía de Binance P2P para principiantes'}></BlogCard>
+			url={'../../assets/images/blog1.jpg'} urlLink={'https://www.binance.com/es/blog/nft/c%C3%B3mo-pueden-la-blockchain-y-los-nft-descentralizar-tu-identidad-digital-en-la-web3-5982381359862285069'}></BlogCard>
+			<BlogCard text={'Tres maneras para lograr vender tu Bitcoin por dinero en efectivo: Una guía rápida de Binance'} url={''} urlLink={'https://www.binance.com/es/blog/all/tres-maneras-para-lograr-vender-tu-bitcoin-por-dinero-en-efectivo-una-gu%C3%ADa-r%C3%A1pida-de-binance-421499824684900899'}></BlogCard>
+      <BlogCard text={'Curso gratis de Blockcahin y Web3'} urlLink={'https://www.binance.com/es/blog/community/consigue-un-curso-gratis-de-blockchain-y-web3-7084372631818180324'}></BlogCard>
+			<BlogCard text={'¿Qué pasará con mi Ethereum tras la fusión?'} urlLink={'https://www.binance.com/es/blog/markets/qu%C3%A9-pasar%C3%A1-con-mi-ethereum-tras-la-fusi%C3%B3n-7301497613864205089'}></BlogCard>
     </View>
   );
 }
