@@ -88,25 +88,19 @@ const Header = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: 15,
-    left: 0,
-	display: 'flex',
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-	justifyContent: 'space-between',
+    justifyContent: "space-between",
     width: "100%",
     backgroundColor: "#32089A",
-    padding: 15,
-    paddingStart: 25,
-    paddingBottom: 5,
-    paddingTop: 5,
-    marginTop: 10,
     shadowColor: "white",
     shadowOpacity: 0.5,
     width: "100%",
-	paddingVertical: 10,
-	textAlign: 'center'
+    textAlign: "center",
+    marginVertical: 5
   },
   row: {
     flexDirection: "row",
@@ -121,13 +115,12 @@ const styles = StyleSheet.create({
   value: {
     color: "#CAF99B",
     fontSize: 15,
-    marginRight: 7,
   },
   image: {
     width: 25,
     height: 25,
     borderRadius: 4,
-	marginRight: 2
+    marginRight: 2,
   },
   tinyLogo: {
     width: 60,

@@ -27,7 +27,6 @@ const Conversor = () => {
     const dataFetch = await response.json();
     setData(
       dataFetch.map((coin) => {
-        // const dataNew = { name: `${coin.name}  ${coin.symbol.toUpperCase()}` };
         const dataNew = { name: coin.name };
         return Object.values(dataNew);
       })

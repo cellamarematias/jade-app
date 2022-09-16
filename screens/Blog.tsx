@@ -21,13 +21,11 @@ export default function Blog() {
   useEffect(() => {
     getData();
   }, []);
-  console.log("newsssssssssss", news);
 
   const getData = () => {
     fetch("https://crypto-news-live3.p.rapidapi.com/news", options)
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         setNews(response);
       })
       .catch((err) => console.error(err));
@@ -36,16 +34,16 @@ export default function Blog() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Header></Header>
         <View style={styles.Headercontainer}>
           <Text style={styles.headerOne}>Crypto</Text>
           <Text style={styles.headerTwo}>Blog</Text>
         </View>
+        <Header></Header>
         <Text style={styles.subheading}>Conocé el mundo Crypto!</Text>
-        {news.map((newsToShow) => {
+        {news.map((newsToShow, index) => {
           return (
             <BlogCard
-              key={newsToShow.url}
+              key={index}
               title={newsToShow.title}
               url={newsToShow.url}
             />
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#130040",
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'flex-start'
   },
   title: {
     fontSize: 20,
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
   },
   Headercontainer: {
     flexDirection: "row",
-    marginBottom: 40,
+    marginVertical: 5
   },
   headerOne: {
     backgroundColor: "#130040",
